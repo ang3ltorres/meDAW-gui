@@ -6,6 +6,7 @@
 #include "shader.hpp"
 #include "camera.hpp"
 #include "texture.hpp"
+#include "sprite.hpp"
 #include "renderTexture.hpp"
 
 namespace gui
@@ -45,6 +46,8 @@ namespace gui
 		static void setRenderTexture(RenderTexture *renderTexture = nullptr);
 		static void setVAO(GLuint VAO);
 		static void setTexture(GLuint texture);
+		static void endFrame();
 		static void updateTime();
+		
 	};
 }

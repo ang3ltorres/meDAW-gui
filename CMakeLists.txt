@@ -37,6 +37,8 @@ target_link_libraries(medawgui PUBLIC
 	png
 	plutosvg
 	plutovg
+
+	GL
 )
 
 # Test Executable

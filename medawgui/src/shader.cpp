@@ -2,6 +2,9 @@
 
 using namespace gui;
 
+char Shader::infoLog[512];
+Shader *Shader::currentShader;
+
 static char* readFile(const char *fileName)
 {
 	FILE *file; 
