@@ -26,6 +26,7 @@ namespace gui
 		static GLFWwindow *window;
 		static unsigned int width;
 		static unsigned int height;
+		static bool forceClose;
 
 		// Default stuff
 		static Shader *currentShader;
@@ -39,6 +40,7 @@ namespace gui
 		static float delta;
 
 		// Library Methods
+		static bool shouldClose();
 		static void clearScreen(const Color &color);
 		static void setRenderTexture(RenderTexture *renderTexture = nullptr);
 		static void setVAO(GLuint VAO);

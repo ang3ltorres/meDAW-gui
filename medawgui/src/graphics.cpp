@@ -2,11 +2,17 @@
 
 using namespace gui;
 
+GLFWwindow *Graphics::window;
+unsigned int Graphics::width;
+unsigned int Graphics::height;
+bool Graphics::forceClose;
+
 Shader *Graphics::currentShader;
 GLuint Graphics::currentVAO;
 GLuint Graphics::currentTexture;
 Camera *Graphics::currentCamera;
 Camera *Graphics::defaultCamera;
+
 float Graphics::fps;
 float Graphics::delta;
 
@@ -56,6 +62,14 @@ void Graphics::finalize()
 {
 	Texture::finalize();
 	glfwTerminate();
+}
+
+bool Graphics::shouldClose()
+{
+	if (Graphics::forceClose)
+		glfwSetWindowShouldClose(Graphics::window, GLFW_TRUE);
+
+	return glfwWindowShouldClose(Graphics::window);
 }
 
 void Graphics::clearScreen(const Color &color)
