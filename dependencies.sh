@@ -10,17 +10,14 @@ buildPath="$rootDir/build/dep/build"
 includePath="$rootDir/build/dep/include"
 libPath="$rootDir/build/dep/bin"
 
-mkdir -p "$downloadPath"
-mkdir -p "$extractPath"
-mkdir -p "$buildPath"
-mkdir -p "$includePath"
-mkdir -p "$libPath"
+mkdir -p $downloadPath $extractPath $buildPath $includePath $libPath
 
-echo "Downloading glfw3";  wget -P "$downloadPath" https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz  > /dev/null 2>&1
-echo "Downloading glew";   wget -P "$downloadPath" -O "$downloadPath/glew-2.2.0.tar.gz" https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz  > /dev/null 2>&1
-echo "Downloading glm";    wget -P "$downloadPath" https://github.com/g-truc/glm/archive/refs/tags/1.0.1.tar.gz  > /dev/null 2>&1
-echo "Downloading zlib";   wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
-echo "Downloading libpng"; wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
+echo "Downloading glfw3";    wget -P "$downloadPath" https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz  > /dev/null 2>&1
+echo "Downloading glew";     wget -P "$downloadPath" -O "$downloadPath/glew-2.2.0.tar.gz" https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz  > /dev/null 2>&1
+echo "Downloading glm";      wget -P "$downloadPath" https://github.com/g-truc/glm/archive/refs/tags/1.0.1.tar.gz  > /dev/null 2>&1
+echo "Downloading zlib";     wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
+echo "Downloading libpng";   wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
+echo "Downloading plutosvg"; wget -P "$downloadPath" https://github.com/sammycage/plutosvg/archive/refs/tags/v0.0.4.tar.gz  > /dev/null 2>&1
 
 for file in "$downloadPath"/*.tar.gz; do
 	echo "Extracting $file"
@@ -93,3 +90,21 @@ make -j $cores
 cd $buildPath/libpng; mv libpng.so libpng16.so libpng16.so.16 libpng16.so.16.45.0 $libPath
 cp pnglibconf.h $includePath/.
 cd $extractPath/libpng-1.6.45; cp png.h pngconf.h $includePath/.
+
+## PLUTOSVG
+cd $buildPath; mkdir plutosvg; cd plutosvg
+
+cmake \
+	-G "Unix Makefiles" \
+	-D CMAKE_BUILD_TYPE=Release \
+	-D BUILD_SHARED_LIBS=ON \
+	-D PLUTOVG_BUILD_EXAMPLES=OFF \
+	-D PLUTOSVG_BUILD_EXAMPLES=OFF \
+	../../extract/plutosvg-0.0.4
+
+make -j $cores
+cd $buildPath/plutosvg/_deps/plutovg-build; mv libplutovg.so libplutovg.so.0 $libPath
+cd $buildPath/plutosvg; mv libplutosvg.so libplutosvg.so.0 $libPath
+cp $buildPath/plutosvg/_deps/plutovg-src/include/plutovg.h $includePath/.
+cp $extractPath/plutosvg-0.0.4/source/plutosvg.h $includePath/.
+
