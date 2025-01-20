@@ -98,6 +98,7 @@ void Texture::getPixelDataPNG(const char *fileName, unsigned char *&buffer, unsi
 	png_read_update_info(png, info);
 
 	size_t row_bytes = png_get_rowbytes(png, info);
+
 	buffer = new unsigned char[row_bytes * (*height)];
 
 	png_bytep *row_pointers = new png_bytep[*height];

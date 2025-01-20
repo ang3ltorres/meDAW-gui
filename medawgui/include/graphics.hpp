@@ -48,6 +48,6 @@ namespace gui
 		static void setTexture(GLuint texture);
 		static void endFrame();
 		static void updateTime();
-		
+		static void setResizeCallback(GLFWframebuffersizefun callback);
 	};
 }

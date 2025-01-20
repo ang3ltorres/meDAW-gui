@@ -126,3 +126,7 @@ void Graphics::updateTime()
 
 }
 
+void Graphics::setResizeCallback(GLFWframebuffersizefun callback)
+{
+	glfwSetFramebufferSizeCallback(Graphics::window, callback);
+}

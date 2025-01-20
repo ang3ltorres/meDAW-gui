@@ -1,37 +1,40 @@
 #include "graphics.hpp"
 
+static void resized([[maybe_unused]] GLFWwindow *window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	gui::Graphics::defaultCamera->width  = width;
+	gui::Graphics::defaultCamera->height = height;
+
+	gui::Graphics::width  = width;
+	gui::Graphics::height = height;
+}
+
 int main()
 {
-	unsigned int width = 800;
-	unsigned int height = 600;
+	unsigned int width = 1280;
+	unsigned int height = 720;
 	
 	gui::Graphics::initialize(width, height, "OpenGL");
+	gui::Graphics::setResizeCallback(&resized);
 	
-	gui::RenderTexture *renderTexture = new gui::RenderTexture{256, 240};
-	gui::Texture       *pngTexture    = new gui::Texture{"D:/sglf_res/png_test.png", 1};
-	gui::Sprite        *pngSprite     = new gui::Sprite{pngTexture, {0, 0, 400, 300}, {0, 0, 400, 300}};
-	// gui::Texture       *svgTexture    = new gui::Texture{"D:/sglf_res/Ghostscript_Tiger.svg", 256, 256, 1};
-	gui::Texture       *svgTexture    = new gui::Texture{"D:/sglf_res/Ghostscript_Tiger.svg", 2.0f, 1};
+	gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
+	gui::Texture       *svgTexture    = new gui::Texture{"../test/test.svg", 256, 256, 1};
 	gui::Sprite        *svgSprite     = new gui::Sprite{svgTexture};
 
 	renderTexture->dst.z *= 1;
 	renderTexture->dst.w *= 1;
 	renderTexture->updateModel();
 
-	svgSprite->dst.x -= 200;
-	svgSprite->dst.y -= 200;
-	svgSprite->updateModel();
-
 	while (!gui::Graphics::shouldClose())
 	{
 		// Update logic
+		svgSprite->dst.x += 1;
+		svgSprite->updateModel();
 
 		// Render to target
 		gui::Graphics::setRenderTexture(renderTexture);
-		gui::Graphics::clearScreen({255, 255, 255});
-
-		pngSprite->batch();
-		pngSprite->texture->draw();
+		gui::Graphics::clearScreen({0, 255, 0});
 
 		// Render to default "canvas"
 		gui::Graphics::setRenderTexture();
@@ -46,8 +49,6 @@ int main()
 	}
 
 	delete svgTexture;
-	delete pngSprite;
-	delete pngTexture;
 	delete renderTexture;
 
 	gui::Graphics::finalize();
