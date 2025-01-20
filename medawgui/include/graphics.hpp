@@ -3,6 +3,7 @@
 #include "pch.hpp"
 
 #include "color.hpp"
+#include "input.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
 #include "texture.hpp"
@@ -29,8 +30,10 @@ namespace gui
 		static unsigned int height;
 		static bool forceClose;
 
+		// Input
+		static Input *input;
+
 		// Default stuff
-		static Shader *currentShader;
 		static GLuint currentVAO;
 		static GLuint currentTexture;
 		static Camera *currentCamera;
@@ -47,7 +50,6 @@ namespace gui
 		static void setVAO(GLuint VAO);
 		static void setTexture(GLuint texture);
 		static void endFrame();
-		static void updateTime();
 		static void setResizeCallback(GLFWframebuffersizefun callback);
 	};
 }

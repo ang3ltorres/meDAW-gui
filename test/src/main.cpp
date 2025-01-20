@@ -32,6 +32,9 @@ int main()
 		svgSprite->dst.x += 1;
 		svgSprite->updateModel();
 
+		if (Input::keyboardStates[GLFW_KEY_F11])
+			printf("F11 down\n");
+
 		// Render to target
 		gui::Graphics::setRenderTexture(renderTexture);
 		gui::Graphics::clearScreen({0, 255, 0});

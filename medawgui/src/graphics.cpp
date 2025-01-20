@@ -7,7 +7,6 @@ unsigned int Graphics::width;
 unsigned int Graphics::height;
 bool Graphics::forceClose;
 
-Shader *Graphics::currentShader;
 GLuint Graphics::currentVAO;
 GLuint Graphics::currentTexture;
 Camera *Graphics::currentCamera;
@@ -45,7 +44,9 @@ void Graphics::initialize(int width, int height, const char *title)
 
 	Graphics::clearScreen({255, 255, 255});
 
-	Graphics::currentShader  = nullptr;
+	glfwSetKeyCallback(Graphics::window, &Input::callback);
+
+	Shader::current  = nullptr;
 	Graphics::currentVAO     = 0;
 	Graphics::currentTexture = 0;
 	Graphics::defaultCamera  = new Camera(Graphics::width, Graphics::height);
@@ -118,12 +119,6 @@ void Graphics::endFrame()
 {
 	glfwSwapBuffers(Graphics::window);
 	glfwPollEvents();
-	Graphics::updateTime();
-}
-
-void Graphics::updateTime()
-{
-
 }
 
 void Graphics::setResizeCallback(GLFWframebuffersizefun callback)

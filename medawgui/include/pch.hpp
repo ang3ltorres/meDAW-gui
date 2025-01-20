@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <bitset>
 
 // OpenGL
 #define GLFW_INCLUDE_NONE

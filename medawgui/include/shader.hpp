@@ -11,7 +11,7 @@ namespace gui
 		~Shader();
 
 		static char infoLog[512];
-		static Shader *currentShader;
+		static Shader *current;
 
 		void use();
 		GLuint program;

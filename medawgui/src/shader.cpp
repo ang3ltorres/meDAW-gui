@@ -3,7 +3,7 @@
 using namespace gui;
 
 char Shader::infoLog[512];
-Shader *Shader::currentShader;
+Shader *Shader::current;
 
 static char* readFile(const char *fileName)
 {
@@ -75,9 +75,9 @@ Shader::~Shader()
 
 void Shader::use()
 {
-	if (Shader::currentShader != this) {
+	if (Shader::current != this) {
 
-		Shader::currentShader = this;
+		Shader::current = this;
 		glUseProgram(program);
 	}
 }
