@@ -10,6 +10,8 @@
 #include "sprite.hpp"
 #include "renderTexture.hpp"
 
+#include "gui/shapes.hpp"
+
 namespace gui
 {
 	class Graphics

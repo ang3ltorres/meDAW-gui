@@ -34,10 +34,10 @@ target_link_directories(medawgui PUBLIC
 target_link_libraries(medawgui PUBLIC
 	glfw
 	GLEW
+	fmt
 	png
 	plutosvg
 	plutovg
-
 	GL
 )
 

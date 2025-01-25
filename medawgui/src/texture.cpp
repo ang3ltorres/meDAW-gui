@@ -30,6 +30,16 @@ GLuint Texture::VAO;
 GLuint Texture::VBO;
 GLuint Texture::EBO;
 
+static void ARGBtoRGBA(unsigned char *&buffer, unsigned int size)
+{
+	for (unsigned int i = 0; i < size; i += 4)
+	{
+		buffer[i]     ^= buffer[i + 2];
+		buffer[i + 2] ^= buffer[i];
+		buffer[i]     ^= buffer[i + 2];
+	}
+}
+
 void Texture::initialize()
 {
 	//* VAO/Shader For 2D Texture drawing
@@ -124,15 +134,25 @@ void Texture::getPixelDataSVGFixed(const char *fileName, unsigned char *&buffer,
 	buffer = new unsigned char[bufferSize];
 	memcpy(buffer, data, bufferSize);
 
-	// Transform to RGBA format
-	static unsigned char temp;
-	for (unsigned int i = 0; i < bufferSize; i += 4)
-	{
-		// Swap bytes
-		temp          = buffer[i];
-		buffer[i]     = buffer[i + 2];
-		buffer[i + 2] = temp;
-	}
+	ARGBtoRGBA(buffer, bufferSize);
+	
+	plutovg_surface_destroy(surface);
+	plutosvg_document_destroy(document);
+}
+
+void Texture::getPixelDataSVGFixedRAW(const std::string &svgData, unsigned char *&buffer, unsigned int widthDesired, unsigned int heightDesired)
+{
+	plutosvg_document_t *document = plutosvg_document_load_from_data(svgData.data(), svgData.length(), -1, -1, nullptr, nullptr);
+	
+	// Get data in ARGB format
+	plutovg_surface_t *surface = plutosvg_document_render_to_surface(document, nullptr, widthDesired, heightDesired, nullptr, nullptr, nullptr);
+
+	unsigned int bufferSize = widthDesired * heightDesired * 4;
+	unsigned char *data = plutovg_surface_get_data(surface);
+	buffer = new unsigned char[bufferSize];
+	memcpy(buffer, data, bufferSize);
+
+	ARGBtoRGBA(buffer, bufferSize);
 	
 	plutovg_surface_destroy(surface);
 	plutosvg_document_destroy(document);
@@ -156,15 +176,31 @@ void Texture::getPixelDataSVGPercent(const char *fileName, unsigned char *&buffe
 	buffer = new unsigned char[bufferSize];
 	memcpy(buffer, data, bufferSize);
 
-	// Transform to RGBA format
-	unsigned char temp;
-	for (unsigned int i = 0; i < bufferSize; i += 4)
-	{
-		// Swap bytes directly
-		temp = buffer[i];
-		buffer[i] = buffer[i + 2];
-		buffer[i + 2] = temp;
-	}
+	ARGBtoRGBA(buffer, bufferSize);
+	
+	plutovg_surface_destroy(surface);
+	plutosvg_document_destroy(document);
+}
+
+void Texture::getPixelDataSVGPercentRAW(const std::string &svgData, unsigned char *&buffer, float percent, unsigned int *width, unsigned int *height)
+{
+	plutosvg_document_t *document = plutosvg_document_load_from_data(svgData.data(), svgData.length(), -1, -1, nullptr, nullptr);
+
+	static plutovg_rect_t extents;
+	plutosvg_document_extents(document, nullptr, &extents);
+
+	*width  = extents.w * percent;
+	*height = extents.h * percent;
+
+	// Get data in ARGB format
+	plutovg_surface_t *surface = plutosvg_document_render_to_surface(document, nullptr, *width, *height, nullptr, nullptr, nullptr);
+
+	unsigned int bufferSize = (*width) * (*height) * 4;
+	unsigned char *data = plutovg_surface_get_data(surface);
+	buffer = new unsigned char[bufferSize];
+	memcpy(buffer, data, bufferSize);
+
+	ARGBtoRGBA(buffer, bufferSize);
 	
 	plutovg_surface_destroy(surface);
 	plutosvg_document_destroy(document);
@@ -216,10 +252,55 @@ Texture::Texture(const char *fileName, unsigned int width, unsigned int height, 
 	SSBO_Data = new S_Common[maxInstances];
 }
 
+Texture::Texture(const std::string &svgData, unsigned int width, unsigned int height, unsigned int maxInstances)
+{
+	Texture::getPixelDataSVGFixedRAW(svgData, pixelData, width, height);
+
+	glCreateTextures(GL_TEXTURE_2D, 1, &id);
+	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	type = 0;
+	glCreateBuffers(1, &UBO);
+	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
+
+	glCreateBuffers(1, &SSBO);
+	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
+	SSBO_Data = new S_Common[maxInstances];
+}
+
 Texture::Texture(const char *fileName, float percent, unsigned int maxInstances)
 : maxInstances(maxInstances), currentInstance(0)
 {
 	Texture::getPixelDataSVGPercent(fileName, pixelData, percent, &width, &height);
+
+	glCreateTextures(GL_TEXTURE_2D, 1, &id);
+	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	type = 0;
+	glCreateBuffers(1, &UBO);
+	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
+
+	glCreateBuffers(1, &SSBO);
+	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
+	SSBO_Data = new S_Common[maxInstances];
+}
+
+Texture::Texture(const std::string &svgData, float percent, unsigned int maxInstances)
+: maxInstances(maxInstances), currentInstance(0)
+{
+	Texture::getPixelDataSVGPercentRAW(svgData, pixelData, percent, &width, &height);
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &id);
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);

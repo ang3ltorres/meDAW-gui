@@ -5,6 +5,7 @@ static void resized([[maybe_unused]] GLFWwindow *window, int width, int height)
 	glViewport(0, 0, width, height);
 	gui::Graphics::defaultCamera->width  = width;
 	gui::Graphics::defaultCamera->height = height;
+	gui::Graphics::defaultCamera->updateViewProjectionMatrix();
 
 	gui::Graphics::width  = width;
 	gui::Graphics::height = height;
@@ -19,21 +20,25 @@ int main()
 	gui::Graphics::setResizeCallback(&resized);
 	
 	gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
-	gui::Texture       *svgTexture    = new gui::Texture{"../test/test.svg", 256, 256, 1};
-	gui::Sprite        *svgSprite     = new gui::Sprite{svgTexture};
+
+	gui::shape::RectangleRounded *rect = new gui::shape::RectangleRounded(200, 200, 50, 15);
 
 	renderTexture->dst.z *= 1;
 	renderTexture->dst.w *= 1;
 	renderTexture->updateModel();
 
+	// svgSprite->dst.z *= 4;
+	// svgSprite->dst.w *= 4;
+	// svgSprite->updateModel();
+
 	while (!gui::Graphics::shouldClose())
 	{
 		// Update logic
-		svgSprite->dst.x += 1;
-		svgSprite->updateModel();
+		// svgSprite->dst.x += 1;
+		// svgSprite->updateModel();
 
-		if (Input::keyboardStates[GLFW_KEY_F11])
-			printf("F11 down\n");
+		if (Input::keyboardStates[GLFW_KEY_ESCAPE])
+			gui::Graphics::forceClose = true;
 
 		// Render to target
 		gui::Graphics::setRenderTexture(renderTexture);
@@ -45,13 +50,16 @@ int main()
 		renderTexture->batch();
 		renderTexture->texture->draw();
 
-		svgSprite->batch();
-		svgSprite->texture->draw();
+		// svgSprite->batch();
+		// svgSprite->texture->draw();
+
+		rect->sprite->batch();
+		rect->sprite->texture->draw();
 
 		gui::Graphics::endFrame();
 	}
 
-	delete svgTexture;
+	delete rect;
 	delete renderTexture;
 
 	gui::Graphics::finalize();
