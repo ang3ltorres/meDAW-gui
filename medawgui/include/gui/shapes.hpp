@@ -4,14 +4,22 @@
 
 namespace gui::shape
 {
-	class RectangleRounded
+	class Shape
 	{
 	public:
-		RectangleRounded(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness);
-		RectangleRounded(const RectangleRounded&) = delete;
-		~RectangleRounded();
+		Shape() = default;
+		Shape(const Shape&) = delete;
+		~Shape() = default;
 
 		gui::Texture *texture;
 		gui::Sprite  *sprite;
+	};
+
+	class Rectangle : public Shape
+	{
+	public:
+		Rectangle(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness);
+		Rectangle(const Rectangle&) = delete;
+		~Rectangle();
 	};
 }

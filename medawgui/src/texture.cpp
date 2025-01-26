@@ -4,7 +4,7 @@
 
 using namespace gui;
 
-// *Generic Vertex data for drawing 2d stuff
+//* Generic Vertex data for drawing 2d stuff
 struct Vertex
 {
 	GLfloat position[2];

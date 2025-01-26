@@ -11,6 +11,7 @@
 #include "renderTexture.hpp"
 
 #include "gui/shapes.hpp"
+#include "gui/palette.hpp"
 
 namespace gui
 {
@@ -52,6 +53,5 @@ namespace gui
 		static void setVAO(GLuint VAO);
 		static void setTexture(GLuint texture);
 		static void endFrame();
-		static void setResizeCallback(GLFWframebuffersizefun callback);
 	};
 }

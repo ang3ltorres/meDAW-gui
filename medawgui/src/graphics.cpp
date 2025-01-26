@@ -15,6 +15,16 @@ Camera *Graphics::defaultCamera;
 float Graphics::fps;
 float Graphics::delta;
 
+static void resized([[maybe_unused]] GLFWwindow *window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	Graphics::defaultCamera->width  = width;
+	Graphics::defaultCamera->height = height;
+
+	Graphics::width  = width;
+	Graphics::height = height;
+}
+
 void Graphics::initialize(int width, int height, const char *title)
 {
 	Graphics::width  = width;
@@ -44,8 +54,6 @@ void Graphics::initialize(int width, int height, const char *title)
 
 	Graphics::clearScreen({255, 255, 255});
 
-	glfwSetKeyCallback(Graphics::window, &Input::callback);
-
 	Shader::current  = nullptr;
 	Graphics::currentVAO     = 0;
 	Graphics::currentTexture = 0;
@@ -54,6 +62,10 @@ void Graphics::initialize(int width, int height, const char *title)
 
 	Graphics::fps   = 0.0f;
 	Graphics::delta = 0.0f;
+
+	// Set callbacks
+	glfwSetKeyCallback(Graphics::window, &Input::callback);
+	glfwSetFramebufferSizeCallback(Graphics::window, resized);
 
 	// Components
 	Texture::initialize();
@@ -119,9 +131,4 @@ void Graphics::endFrame()
 {
 	glfwSwapBuffers(Graphics::window);
 	glfwPollEvents();
-}
-
-void Graphics::setResizeCallback(GLFWframebuffersizefun callback)
-{
-	glfwSetFramebufferSizeCallback(Graphics::window, callback);
 }

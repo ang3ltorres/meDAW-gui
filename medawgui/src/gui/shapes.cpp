@@ -2,7 +2,7 @@
 
 using namespace gui::shape;
 
-RectangleRounded::RectangleRounded(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness)
+Rectangle::Rectangle(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness)
 {
 const std::string svgRectanleRounded = fmt::format(
 R"(<?xml version='1.0' encoding='UTF-8' standalone='no'?>
@@ -36,7 +36,7 @@ thickness / 2.0f    // 6
 	sprite = new Sprite(texture);
 }
 
-RectangleRounded::~RectangleRounded()
+Rectangle::~Rectangle()
 {
 	delete sprite;
 	delete texture;
