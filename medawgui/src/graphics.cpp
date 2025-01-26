@@ -23,6 +23,8 @@ static void resized([[maybe_unused]] GLFWwindow *window, int width, int height)
 
 	Graphics::width  = width;
 	Graphics::height = height;
+
+	//* Update All UBO's
 }
 
 void Graphics::initialize(int width, int height, const char *title)

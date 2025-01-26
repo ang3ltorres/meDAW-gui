@@ -3,32 +3,40 @@
 layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec2 aTexCoord;
 
-struct S_CommonTexture {
-	vec4 v_Src;
-	vec4 v_TintColor;
-	mat4 v_ViewProjection;
-	mat4 v_Model;
+struct GPU_SSBO
+{
+	vec4 Src;
+	vec4 TintColor;
+	mat4 Model;
 };
 
-layout(std140, binding = 0) uniform CommonData {
-	int v_type;
+layout(std430, binding = 1) buffer GPU_SSBO_buffer
+{
+	GPU_SSBO common_data[];
 };
 
-layout(std430, binding = 1) buffer v_CommonBuffer {
-	S_CommonTexture v_Data[];
+struct GPU_UBO
+{
+	int Type;
+	mat4 ViewProjection;
 };
 
-out vec4 f_TintColor;
-out vec2 f_TexCoord;
-out flat int f_type;
+layout(std140, binding = 0) uniform GPU_UBO_buffer
+{
+	GPU_UBO global_data;
+};
+
+out vec4 TintColor;
+out vec2 TexCoord;
+out flat int Type;
 
 void main()
 {
-	S_CommonTexture vertex =  v_Data[gl_InstanceID];
+	GPU_SSBO common_data =  common_data[gl_InstanceID];
 
-	f_TintColor = vertex.v_TintColor / 255.0;
-	f_TexCoord  = vertex.v_Src.xy + aTexCoord * vertex.v_Src.zw;
-	gl_Position = vertex.v_ViewProjection * vertex.v_Model * vec4(aPos, 0.0, 1.0);
+	TexCoord  = common_data.Src.xy + aTexCoord * common_data.Src.zw;
+	gl_Position = global_data.ViewProjection * common_data.Model * vec4(aPos, 0.0, 1.0);
 	
-	f_type      = v_type;
+	TintColor = common_data.TintColor / 255.0;
+	Type      = global_data.Type;
 }

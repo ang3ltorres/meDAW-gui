@@ -206,6 +206,26 @@ void Texture::getPixelDataSVGPercentRAW(const std::string &svgData, unsigned cha
 	plutosvg_document_destroy(document);
 }
 
+void Texture::setDefaultTextureParameters()
+{
+	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+void Texture::createUBOnSSBO(int textureType)
+{
+	UBO_Data.Type = textureType;
+	UBO_Data.ViewProjection = Graphics::currentCamera->getViewProjectionMatrix();
+	glCreateBuffers(1, &UBO);
+	glNamedBufferData(UBO, sizeof(GPU_UBO), &UBO_Data, GL_STREAM_DRAW);
+
+	glCreateBuffers(1, &SSBO);
+	glNamedBufferData(SSBO, sizeof(GPU_SSBO) * maxInstances, nullptr, GL_STREAM_DRAW);
+	SSBO_Data = new GPU_SSBO[maxInstances];
+}
+
 Texture::Texture(const char *fileName, unsigned int maxInstances)
 : maxInstances(maxInstances), currentInstance(0)
 {
@@ -215,18 +235,8 @@ Texture::Texture(const char *fileName, unsigned int maxInstances)
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	type = 0;
-	glCreateBuffers(1, &UBO);
-	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
-
-	glCreateBuffers(1, &SSBO);
-	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
-	SSBO_Data = new S_Common[maxInstances];
+	setDefaultTextureParameters();
+	createUBOnSSBO(0);
 }
 
 Texture::Texture(const char *fileName, unsigned int width, unsigned int height, unsigned int maxInstances)
@@ -238,21 +248,12 @@ Texture::Texture(const char *fileName, unsigned int width, unsigned int height, 
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	type = 0;
-	glCreateBuffers(1, &UBO);
-	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
-
-	glCreateBuffers(1, &SSBO);
-	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
-	SSBO_Data = new S_Common[maxInstances];
+	setDefaultTextureParameters();
+	createUBOnSSBO(0);
 }
 
 Texture::Texture(const std::string &svgData, unsigned int width, unsigned int height, unsigned int maxInstances)
+: width(width), height(height), maxInstances(maxInstances), currentInstance(0)
 {
 	Texture::getPixelDataSVGFixedRAW(svgData, pixelData, width, height);
 
@@ -260,18 +261,8 @@ Texture::Texture(const std::string &svgData, unsigned int width, unsigned int he
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	type = 0;
-	glCreateBuffers(1, &UBO);
-	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
-
-	glCreateBuffers(1, &SSBO);
-	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
-	SSBO_Data = new S_Common[maxInstances];
+	setDefaultTextureParameters();
+	createUBOnSSBO(0);
 }
 
 Texture::Texture(const char *fileName, float percent, unsigned int maxInstances)
@@ -283,18 +274,8 @@ Texture::Texture(const char *fileName, float percent, unsigned int maxInstances)
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	type = 0;
-	glCreateBuffers(1, &UBO);
-	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
-
-	glCreateBuffers(1, &SSBO);
-	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
-	SSBO_Data = new S_Common[maxInstances];
+	setDefaultTextureParameters();
+	createUBOnSSBO(0);
 }
 
 Texture::Texture(const std::string &svgData, float percent, unsigned int maxInstances)
@@ -306,18 +287,8 @@ Texture::Texture(const std::string &svgData, float percent, unsigned int maxInst
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	type = 0;
-	glCreateBuffers(1, &UBO);
-	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
-
-	glCreateBuffers(1, &SSBO);
-	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
-	SSBO_Data = new S_Common[maxInstances];
+	setDefaultTextureParameters();
+	createUBOnSSBO(0);
 }
 
 Texture::Texture(unsigned int width, unsigned int height, unsigned int maxInstances)
@@ -327,19 +298,10 @@ Texture::Texture(unsigned int width, unsigned int height, unsigned int maxInstan
 	unsigned char color[4] = { 0, 0, 0, 255 };
 	glCreateTextures(GL_TEXTURE_2D, 1, &id);
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glClearTexSubImage(id, 0, 0, 0, 0, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	type = 1;
-	glCreateBuffers(1, &UBO);
-	glNamedBufferData(UBO, sizeof(int), &type, GL_STREAM_DRAW);
-
-	glCreateBuffers(1, &SSBO);
-	glNamedBufferData(SSBO, sizeof(S_Common) * maxInstances, nullptr, GL_STREAM_DRAW);
-	SSBO_Data = new S_Common[maxInstances];
+	setDefaultTextureParameters();
+	createUBOnSSBO(1);	
 
 	pixelData = nullptr;
 }
@@ -349,7 +311,7 @@ Texture::~Texture()
 	glDeleteBuffers(1, &UBO);
 	glDeleteBuffers(1, &SSBO);
 	glDeleteTextures(1, &id);
-	SSBO_Data = new S_Common[maxInstances];
+	SSBO_Data = new GPU_SSBO[maxInstances];
 	delete[] SSBO_Data;
 	delete[] pixelData;
 }
@@ -361,13 +323,18 @@ void Texture::draw()
 	Graphics::setTexture(id);
 	
 	glBindBufferBase(GL_UNIFORM_BUFFER, 0, UBO);
-	// glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(int), &type);
 	
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, SSBO);
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(S_Common) * currentInstance, SSBO_Data);
+	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GPU_SSBO) * currentInstance, SSBO_Data);
 	
 	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, currentInstance);
 	currentInstance = 0;
 }
 
+void Texture::updateUBO()
+{
+	//! Update only ViewProjection
+	UBO_Data.ViewProjection = Graphics::currentCamera->getViewProjectionMatrix();
+	glNamedBufferSubData(UBO, 0, sizeof(GPU_UBO), &UBO_Data);
+}
 

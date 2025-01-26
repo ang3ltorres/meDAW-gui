@@ -10,12 +10,17 @@ namespace gui
 	{
 	public:
 
-		struct alignas(16) S_Common
+		struct alignas(16) GPU_SSBO
 		{
-			glm::vec4 u_Src;
-			glm::vec4 u_TintColor;
-			glm::mat4 u_ViewProjection;
-			glm::mat4 u_Model;
+			glm::vec4 Src;
+			glm::vec4 TintColor;
+			glm::mat4 Model;
+		};
+
+		struct alignas(16) GPU_UBO
+		{
+			alignas(16) int Type;
+			alignas(16) glm::mat4 ViewProjection;
 		};
 
 		GLuint id;
@@ -38,6 +43,9 @@ namespace gui
 		static GLuint VBO;
 		static GLuint EBO;
 
+		void setDefaultTextureParameters();
+		void createUBOnSSBO(int textureType);
+
 		Texture(const char *fileName, unsigned int maxInstances);
 		Texture(const char *fileName, unsigned int width, unsigned int height, unsigned int maxInstances);
 		Texture(const std::string &svgData, unsigned int width, unsigned int height, unsigned int maxInstances);
@@ -49,13 +57,14 @@ namespace gui
 
 		// Batch
 		GLuint UBO;
-		int type;
+		GPU_UBO UBO_Data;
 
 		GLuint SSBO;
-		S_Common *SSBO_Data;
+		GPU_SSBO *SSBO_Data;
 		unsigned int maxInstances;
 		unsigned int currentInstance;
 
 		void draw();
+		void updateUBO();
 	};
 }

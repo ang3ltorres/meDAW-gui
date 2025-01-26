@@ -9,7 +9,7 @@ int main()
 	
 	// gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
 
-	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 50, 10, 4);
+	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -27,6 +27,9 @@ int main()
 
 		if (Input::keyboardStates[GLFW_KEY_ESCAPE])
 			gui::Graphics::forceClose = true;
+
+		// gui::Graphics::currentCamera->move({1, 0});
+		// rect->sprite->texture->updateUBO();
 
 		// Render to target
 		// gui::Graphics::setRenderTexture(renderTexture);
