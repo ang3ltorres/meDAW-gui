@@ -34,11 +34,6 @@ void Camera::updateViewProjectionMatrix()
 	viewProjection = projection * view;;
 }
 
-mat4 &Camera::getViewProjectionMatrix()
-{
-	return viewProjection;
-}
-
 void Camera::updateView()
 {
 	view = translate(mat4(1.0f), vec3(position, 0.0f));

@@ -3,6 +3,7 @@
 layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec2 aTexCoord;
 
+//* SSBO *//
 struct GPU_SSBO
 {
 	vec4 Src;
@@ -15,15 +16,21 @@ layout(std430, binding = 1) buffer GPU_SSBO_buffer
 	GPU_SSBO common_data[];
 };
 
+//* Camera UBO_Shared shared *//
 struct GPU_UBO
 {
-	int Type;
 	mat4 ViewProjection;
 };
 
-layout(std140, binding = 0) uniform GPU_UBO_buffer
+layout(std140, binding = 0) uniform GPU_UBO_buffer_shared
 {
 	GPU_UBO global_data;
+};
+
+//* Texture type UBO_Shared non-shared *//
+layout(std140, binding = 1) uniform GPU_UBO_buffer_nonshared
+{
+	int Type_in;
 };
 
 out vec4 TintColor;
@@ -38,5 +45,5 @@ void main()
 	gl_Position = global_data.ViewProjection * common_data.Model * vec4(aPos, 0.0, 1.0);
 	
 	TintColor = common_data.TintColor / 255.0;
-	Type      = global_data.Type;
+	Type      = Type_in;
 }

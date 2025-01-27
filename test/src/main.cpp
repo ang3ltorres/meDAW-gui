@@ -7,7 +7,7 @@ int main()
 	
 	gui::Graphics::initialize(width, height, "OpenGL");
 	
-	// gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
+	gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
 
 	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
 
@@ -22,8 +22,8 @@ int main()
 	while (!gui::Graphics::shouldClose())
 	{
 		// Update logic
-		// svgSprite->dst.x += 1;
-		// svgSprite->updateModel();
+		renderTexture->dst.x += 1;
+		renderTexture->updateModel();
 
 		if (Input::keyboardStates[GLFW_KEY_ESCAPE])
 			gui::Graphics::forceClose = true;
@@ -32,27 +32,29 @@ int main()
 		// rect->sprite->texture->updateUBO();
 
 		// Render to target
-		// gui::Graphics::setRenderTexture(renderTexture);
-		// gui::Graphics::clearScreen({0, 255, 0});
+		gui::Graphics::setRenderTexture(renderTexture);
+		gui::Graphics::clearScreen({0, 255, 0});
+		rect->sprite->batch();
+		rect->sprite->texture->draw();
 
 		// Render to default "canvas"
 		gui::Graphics::setRenderTexture();
 		gui::Graphics::clearScreen({255, 143, 119});
 		
-		// renderTexture->batch();
-		// renderTexture->texture->draw();
+		renderTexture->batch();
+		renderTexture->texture->draw();
 
 		// svgSprite->batch();
 		// svgSprite->texture->draw();
 
-		rect->sprite->batch();
-		rect->sprite->texture->draw();
+		// rect->sprite->batch();
+		// rect->sprite->texture->draw();
 
 		gui::Graphics::endFrame();
 	}
 
 	delete rect;
-	// delete renderTexture;
+	delete renderTexture;
 
 	gui::Graphics::finalize();
 	return 0;

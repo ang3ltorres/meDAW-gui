@@ -24,7 +24,6 @@ namespace gui
 		void move(const glm::vec2& delta);
 		void setZoom(float zoom);
 		void updateViewProjectionMatrix();
-		glm::mat4& getViewProjectionMatrix();
 		void updateView();
 		void updateProjection();
 	};

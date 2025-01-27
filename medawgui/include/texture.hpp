@@ -19,7 +19,6 @@ namespace gui
 
 		struct alignas(16) GPU_UBO
 		{
-			alignas(16) int Type;
 			alignas(16) glm::mat4 ViewProjection;
 		};
 
@@ -37,14 +36,17 @@ namespace gui
 		static void getPixelDataSVGPercent(const char *fileName, unsigned char *&buffer, float percent, unsigned int *width, unsigned int *height);
 		static void getPixelDataSVGPercentRAW(const std::string &svgData, unsigned char *&buffer, float percent, unsigned int *width, unsigned int *height);
 
-		// Generic Draw Texture 2D stuff
+		//* Generic Draw Texture 2D stuff
 		static Shader *shader;
 		static GLuint VAO;
 		static GLuint VBO;
 		static GLuint EBO;
-
-		void setDefaultTextureParameters();
-		void createUBOnSSBO(int textureType);
+		static GLuint UBO_Shared;
+		static GPU_UBO UBO_Data;
+		
+		// Constructor common
+		void createTexture();
+		void createBuffers(int textureType);
 
 		Texture(const char *fileName, unsigned int maxInstances);
 		Texture(const char *fileName, unsigned int width, unsigned int height, unsigned int maxInstances);
@@ -55,9 +57,8 @@ namespace gui
 		Texture(const Texture&) = delete;
 		~Texture();
 
-		// Batch
-		GLuint UBO;
-		GPU_UBO UBO_Data;
+		GLuint UBO_NonShared;
+		int Type;
 
 		GLuint SSBO;
 		GPU_SSBO *SSBO_Data;
@@ -65,6 +66,5 @@ namespace gui
 		unsigned int currentInstance;
 
 		void draw();
-		void updateUBO();
 	};
 }

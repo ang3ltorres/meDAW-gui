@@ -18,13 +18,11 @@ float Graphics::delta;
 static void resized([[maybe_unused]] GLFWwindow *window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-	Graphics::defaultCamera->width  = width;
-	Graphics::defaultCamera->height = height;
+	Graphics::currentCamera->width  = width;
+	Graphics::currentCamera->height = height;
 
 	Graphics::width  = width;
 	Graphics::height = height;
-
-	//* Update All UBO's
 }
 
 void Graphics::initialize(int width, int height, const char *title)
@@ -109,6 +107,10 @@ void Graphics::setRenderTexture(RenderTexture *renderTexture)
 	}
 
 	Graphics::currentCamera->updateViewProjectionMatrix();
+
+	//? Submit camera data to GPU
+	Texture::UBO_Data.ViewProjection = Graphics::currentCamera->viewProjection;
+	glNamedBufferSubData(Texture::UBO_Shared, 0, sizeof(Texture::GPU_UBO), &Texture::UBO_Data);
 }
 
 void Graphics::setVAO(GLuint VAO)
