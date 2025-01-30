@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# libgl1-mesa-dev
+# libglu1-mesa-dev
+# libwayland-dev
+# pkg-config
+# libxkbcommon-dev
+# libxrandr-dev
+# libxinerama-dev
+# libxcursor-dev
+# libxi-dev
+
 rootDir=$(pwd)
 cores="$(nproc)"
 echo "Root dir: ${rootDir}"
