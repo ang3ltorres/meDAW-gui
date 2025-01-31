@@ -28,6 +28,7 @@ echo "Downloading glm";      wget -P "$downloadPath" https://github.com/g-truc/g
 echo "Downloading fmt";      wget -P "$downloadPath" https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.tar.gz  > /dev/null 2>&1
 echo "Downloading zlib";     wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
 echo "Downloading libpng";   wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
+echo "Downloading freetype"; wget -P "$downloadPath" https://download.savannah.gnu.org/releases/freetype/freetype-2.13.3.tar.gz > /dev/null 2>&1
 echo "Downloading plutosvg"; wget -P "$downloadPath" https://github.com/sammycage/plutosvg/archive/refs/tags/v0.0.4.tar.gz  > /dev/null 2>&1
 
 for file in "$downloadPath"/*.tar.gz; do
@@ -48,7 +49,7 @@ cmake \
 	../../extract/glfw-3.4
 
 make -j $cores
-cd $buildPath/glfw3/src; mv libglfw.so libglfw.so.3 libglfw.so.3.4 $libPath
+cd src; mv libglfw.so libglfw.so.3 libglfw.so.3.4 $libPath
 cp -r "${extractPath}/glfw-3.4/include/GLFW" $includePath/.
 
 ## GLEW
@@ -62,7 +63,7 @@ cmake \
 	../../extract/glew-2.2.0/build/cmake
 
 make -j $cores
-cd $buildPath/glew/lib; mv libGLEW.so libGLEW.so.2.2 libGLEW.so.2.2.0 $libPath
+cd lib; mv libGLEW.so libGLEW.so.2.2 libGLEW.so.2.2.0 $libPath
 cp -r "${extractPath}/glew-2.2.0/include/GL" $includePath/.
 
 ## GLM
@@ -81,7 +82,7 @@ cmake \
 	../../extract/fmt-11.1.2
 
 make -j $cores
-cd $buildPath/fmt; mv libfmt.so libfmt.so.11 libfmt.so.11.1.2 $libPath
+mv libfmt.so libfmt.so.11 libfmt.so.11.1.2 $libPath
 cp -r "${extractPath}/fmt-11.1.2/include/fmt" $includePath/.
 
 ## ZLIB
@@ -94,7 +95,7 @@ cmake \
 	../../extract/zlib-1.3.1
 
 make -j $cores
-cd $buildPath/zlib; mv libz.so libz.so.1 libz.so.1.3.1 $libPath
+mv libz.so libz.so.1 libz.so.1.3.1 $libPath
 cp zconf.h $includePath/.
 cp "${extractPath}/zlib-1.3.1/zlib.h" $includePath/.
 
@@ -115,9 +116,36 @@ cmake \
 	../../extract/libpng-1.6.45
 
 make -j $cores
-cd $buildPath/libpng; mv libpng.so libpng16.so libpng16.so.16 libpng16.so.16.45.0 $libPath
+mv libpng.so libpng16.so libpng16.so.16 libpng16.so.16.45.0 $libPath
 cp pnglibconf.h $includePath/.
 cd $extractPath/libpng-1.6.45; cp png.h pngconf.h $includePath/.
+
+## FREETYPE
+cd $buildPath; mkdir freetype; cd freetype
+
+cmake \
+	-G "Unix Makefiles" \
+	-D CMAKE_BUILD_TYPE=Release \
+	-D BUILD_SHARED_LIBS=ON \
+	-D FT_DISABLE_BROTLI=ON \
+	-D FT_DISABLE_BZIP2=ON \
+	-D FT_DISABLE_HARFBUZZ=ON \
+	-D FT_DISABLE_PNG=OFF \
+	-D FT_DISABLE_ZLIB=OFF \
+	-D FT_REQUIRE_PNG=ON \
+	-D FT_REQUIRE_ZLIB=ON \
+	-D PNG_LIBRARY_DEBUG=PNG_LIBRARY_DEBUG-NOTFOUND \
+	-D PNG_LIBRARY_RELEASE=$libPath/libpng16.so \
+	-D PNG_PNG_INCLUDE_DIR=$includePath \
+	-D ZLIB_LIBRARY_DEBUG=ZLIB_LIBRARY_DEBUG-NOTFOUND \
+	-D ZLIB_LIBRARY_RELEASE=$libPath/libz.so \
+	-D ZLIB_INCLUDE_DIR=$includePath \
+	../../extract/freetype-2.13.3
+
+make -j $cores
+mv libfreetype.so libfreetype.so.6 libfreetype.so.6.20.2 $libPath
+cd $extractPath/freetype-2.13.3/include; cp -r --preserve=all ./ $includePath/.
+cd $buildPath/freetype/include/freetype/config; cp *.h $includePath/freetype/config/.
 
 ## PLUTOSVG
 cd $buildPath; mkdir plutosvg; cd plutosvg

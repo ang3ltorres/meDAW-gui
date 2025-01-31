@@ -35,6 +35,7 @@ target_link_libraries(medawgui PUBLIC
 	glfw
 	GLEW
 	fmt
+	freetype
 	png
 	plutosvg
 	plutovg
