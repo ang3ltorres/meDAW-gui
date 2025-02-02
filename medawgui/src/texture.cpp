@@ -309,11 +309,10 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std:
 		// Store glyph metadata
 		(*glyphs)[c] =
 		{
-			glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-			glm::vec2(bitmap.width, bitmap.rows),
-			glm::vec2(float(xOffset) / *width, float(yOffset) / *height),
-			glm::vec2(float(xOffset + bitmap.width) / *width, float(yOffset + bitmap.rows) / *height),
-			float(face->glyph->advance.x >> 6)
+			glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),  // Bearing
+			glm::vec2(bitmap.width, bitmap.rows),                          // Size
+			glm::ivec2(xOffset, yOffset),                                  // NEW: Absolute atlas position
+			float(face->glyph->advance.x >> 6)                             // Advance
 		};
 
 		// Move to next position

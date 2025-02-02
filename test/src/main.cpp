@@ -11,7 +11,9 @@ int main()
 
 	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
 
-	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 48};
+	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 90};
+
+	gui::Text *text = new gui::Text{font, "EXAMPLE TEXTa"};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -33,7 +35,7 @@ int main()
 
 		// Render to target
 		gui::Graphics::setRenderTexture(renderTexture);
-		gui::Graphics::clearScreen({0, 255, 0});
+		gui::Graphics::clearScreen({0, 0, 0});
 		rect->sprite->batch();
 		rect->sprite->texture->draw();
 
@@ -44,8 +46,11 @@ int main()
 		renderTexture->batch();
 		renderTexture->texture->draw();
 
-		font->batch();
-		font->texture->draw();
+		// font->batch();
+		// font->texture->draw();
+
+		text->renderTexture->batch();
+		text->renderTexture->texture->draw();
 
 		// svgSprite->batch();
 		// svgSprite->texture->draw();

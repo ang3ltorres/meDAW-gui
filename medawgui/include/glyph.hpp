@@ -8,8 +8,7 @@ namespace gui
 	{
 		glm::vec2 bearing;
 		glm::vec2 size;
-		glm::vec2 uvMin;
-		glm::vec2 uvMax;
+		glm::ivec2 atlasPos;
 		float advance;
 	};
 }

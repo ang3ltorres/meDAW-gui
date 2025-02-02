@@ -4,64 +4,8 @@
 
 using namespace gui;
 
-Shader *Text::shader;
-
-static const unsigned int indices[] =
-{
-	0, 1, 2,
-	1, 2, 3,
-};
-
-void Text::initialize()
-{
-	// Load text rendering shader
-	Text::shader = new Shader("../shader/text.vs", "../shader/text.fs");
-
-	// Create VAO for text rendering
-	glCreateVertexArrays(1, &Text::VAO);
-
-	// Create VBO for dynamic text rendering
-	glCreateBuffers(1, &Text::VBO);
-	glNamedBufferStorage(Text::VBO, 1024 * sizeof(float), nullptr, GL_DYNAMIC_STORAGE_BIT); // Allocated but empty
-
-	// Create EBO for indexed rendering
-	glCreateBuffers(1, &Text::EBO);
-	glNamedBufferStorage(Text::EBO, sizeof(indices), indices, 0);
-
-	// Link buffers
-	glVertexArrayElementBuffer(Text::VAO, Text::EBO);
-
-	GLuint vbufIndex = 0;
-	glVertexArrayVertexBuffer(Text::VAO, vbufIndex, Text::VBO, 0, sizeof(float) * 4);
-
-	// Position attribute (layout(location = 0) in vec2 aPos)
-	GLuint aPos_location = 0;
-	glVertexArrayAttribFormat(Text::VAO, aPos_location, 2, GL_FLOAT, GL_FALSE, 0);
-	glVertexArrayAttribBinding(Text::VAO, aPos_location, vbufIndex);
-	glEnableVertexArrayAttrib(Text::VAO, aPos_location);
-
-	// Texture coordinate attribute (layout(location = 1) in vec2 aTexCoord)
-	GLuint aTexCoord_location = 1;
-	glVertexArrayAttribFormat(Text::VAO, aTexCoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2);
-	glVertexArrayAttribBinding(Text::VAO, aTexCoord_location, vbufIndex);
-	glEnableVertexArrayAttrib(Text::VAO, aTexCoord_location);
-
-	// Create shared UBO for view-projection matrix
-	glCreateBuffers(1, &Text::UBO_Shared);
-	glNamedBufferData(Text::UBO_Shared, sizeof(Text::GPU_UBO), nullptr, GL_STREAM_DRAW);
-
-	//! Fill camera buffer (UBO_Shared)
-	glCreateBuffers(1, &Texture::UBO_Shared);
-	glNamedBufferData(Texture::UBO_Shared, sizeof(Texture::GPU_UBO), nullptr, GL_STREAM_DRAW);
-}
-
-void Text::finalize()
-{
-	delete Texture::shader;
-}
-
 Text::Text(Font *font, const char *text)
-: font(font)
+: font(font), renderTexture(nullptr)
 {
 	render(text);
 }
@@ -69,9 +13,9 @@ Text::Text(Font *font, const char *text)
 void Text::render(const char *text)
 {
 	// Step 1: Calculate required texture size
-	float width = 0.0f;
+	float width     = 0.0f;
 	float maxHeight = 0.0f;
-	float scale = 1.0f;
+	float scale     = 1.0f;
 
 	for (const char *c = text; *c; c++)
 	{
@@ -82,7 +26,6 @@ void Text::render(const char *text)
 		}
 
 		auto it = font->glyphs->find(*c);
-
 		if (it == font->glyphs->end())
 			continue;
 
@@ -92,20 +35,21 @@ void Text::render(const char *text)
 		maxHeight = std::max(maxHeight, glyph.size.y * scale);
 	}
 
-	unsigned int textureWidth = static_cast<unsigned int>(std::ceil(width));
-	unsigned int textureHeight = static_cast<unsigned int>(std::ceil(maxHeight));
+	unsigned int textureWidth  = (unsigned int)std::ceil(width);
+	unsigned int textureHeight = (unsigned int)std::ceil(maxHeight);
 
-	textureWidth = std::max(textureWidth, 1u);
+	textureWidth  = std::max(textureWidth, 1u);
 	textureHeight = std::max(textureHeight, 1u);
 
-	// Step 2: Create RenderTexture
+	// Step 2: Create or update the RenderTexture
+	delete renderTexture;
 	renderTexture = new gui::RenderTexture{textureWidth, textureHeight};
 
-	// Step 4: Bind FBO and render text into the texture
+	// Step 3: Bind the FBO and to draw text
 	Graphics::setRenderTexture(renderTexture);
 
-	float x = 0.0f, y = 0.0f;
-	std::vector<float> vertices;
+	float x = 0.0f;
+	float y = 0.0f;
 
 	for (const char *c = text; *c; c++)
 	{
@@ -121,39 +65,28 @@ void Text::render(const char *text)
 
 		const gui::Glyph &glyph = it->second;
 
-		float xpos = x + glyph.bearing.x * scale;
-		float ypos = y - (glyph.bearing.y - glyph.size.y) * scale;
-		float w = glyph.size.x * scale;
-		float h = glyph.size.y * scale;
+		// Setup texture coordinates (Atlas UVs)
+		font->src = {glyph.atlasPos.x, glyph.atlasPos.y, glyph.size.x, glyph.size.y};
 
-		float uMin = glyph.uvMin.x;
-		float vMin = glyph.uvMin.y;
-		float uMax = glyph.uvMax.x;
-		float vMax = glyph.uvMax.y;
+		// Position the glyph
+		font->dst = {x + glyph.bearing.x * scale, y - (glyph.bearing.y - glyph.size.y) * scale, glyph.size.x * scale, glyph.size.y * scale};
 
-		vertices.insert(vertices.end(),
-		{
-			xpos,     ypos + h, uMin, vMax, 
-			xpos,     ypos,     uMin, vMin, 
-			xpos + w, ypos,     uMax, vMin, 
+		// Update model matrix & batch
+		font->updateModel();
+		font->batch();
 
-			xpos,     ypos + h, uMin, vMax, 
-			xpos + w, ypos,     uMax, vMin, 
-			xpos + w, ypos + h, uMax, vMax  
-		});
-
+		// Move to the next glyph position
 		x += glyph.advance * scale;
 	}
 
-	Text::shader->use();
-	Graphics::setVAO(Text::VAO);
-	Graphics::setTexture(renderTexture->texture->id);
+	// Draw all batched glyphs
+	font->texture->draw();
 
-	// Upload vertex data
+	font->src = {0, 0, font->texture->width, font->texture->height};
+	font->dst = {0, 0, font->texture->width, font->texture->height};
+	font->updateModel();
 
-	// using modern opengl
-
-	// Step 5: Unbind FBO (Back to screen rendering)
-	Graphics::setRenderTexture(0);
+	// Step 4: Unbind FBO
+	Graphics::setRenderTexture();
 }
 
