@@ -3,6 +3,7 @@
 #include "pch.hpp"
 
 #include "shader.hpp"
+#include "glyph.hpp"
 
 namespace gui
 {
@@ -35,6 +36,7 @@ namespace gui
 		static void getPixelDataSVGFixedRAW(const std::string &svgData, unsigned char *&buffer, unsigned int widthDesired, unsigned int heightDesired);
 		static void getPixelDataSVGPercent(const char *fileName, unsigned char *&buffer, float percent, unsigned int *width, unsigned int *height);
 		static void getPixelDataSVGPercentRAW(const std::string &svgData, unsigned char *&buffer, float percent, unsigned int *width, unsigned int *height);
+		static void getPixelDataFont(const char *fontPath, unsigned int fontSize, std::map<char, gui::Glyph> *&glyphs, unsigned char *&buffer, unsigned int *width, unsigned int *height);
 
 		//* Generic Draw Texture 2D stuff
 		static Shader *shader;
@@ -53,6 +55,7 @@ namespace gui
 		Texture(const std::string &svgData, unsigned int width, unsigned int height, unsigned int maxInstances);
 		Texture(const char *fileName, float percent, unsigned int maxInstances);
 		Texture(const std::string &svgData, float percent, unsigned int maxInstances);
+		Texture(const char *fontPath, unsigned int fontSize, std::map<char, gui::Glyph> *&glyphs, unsigned int maxInstances);
 		Texture(unsigned int width, unsigned int height, unsigned int maxInstances);
 		Texture(const Texture&) = delete;
 		~Texture();

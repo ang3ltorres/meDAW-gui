@@ -11,6 +11,8 @@ int main()
 
 	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
 
+	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 48};
+
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
 	// renderTexture->updateModel();
@@ -22,8 +24,6 @@ int main()
 	while (!gui::Graphics::shouldClose())
 	{
 		// Update logic
-		renderTexture->dst.x += 1;
-		renderTexture->updateModel();
 
 		if (Input::keyboardStates[GLFW_KEY_ESCAPE])
 			gui::Graphics::forceClose = true;
@@ -44,6 +44,9 @@ int main()
 		renderTexture->batch();
 		renderTexture->texture->draw();
 
+		font->batch();
+		font->texture->draw();
+
 		// svgSprite->batch();
 		// svgSprite->texture->draw();
 
@@ -53,6 +56,7 @@ int main()
 		gui::Graphics::endFrame();
 	}
 
+	delete font;
 	delete rect;
 	delete renderTexture;
 

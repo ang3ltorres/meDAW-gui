@@ -9,6 +9,7 @@
 #include "texture.hpp"
 #include "sprite.hpp"
 #include "renderTexture.hpp"
+#include "font.hpp"
 
 #include "gui/shapes.hpp"
 #include "gui/palette.hpp"

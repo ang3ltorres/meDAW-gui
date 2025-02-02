@@ -10,8 +10,8 @@ namespace gui
 	class Drawable
 	{
 	public:
-		Drawable(const Drawable&) = delete;
 		Drawable(Texture *texture);
+		Drawable(const Drawable&) = delete;
 		~Drawable() = default;
 
 		Texture *texture;

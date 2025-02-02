@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <string>
 #include <bitset>
+#include <map>
 
 // OpenGL
 #define GLFW_INCLUDE_NONE
@@ -18,6 +19,10 @@
 
 // PNG
 #include <png.h>
+
+// FREETYPE
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 // SVG
 #include <plutosvg.h>

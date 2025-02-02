@@ -214,6 +214,117 @@ void Texture::getPixelDataSVGPercentRAW(const std::string &svgData, unsigned cha
 	plutosvg_document_destroy(document);
 }
 
+void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std::map<char, gui::Glyph> *&glyphs, unsigned char *&buffer, unsigned int *width, unsigned int *height)
+{
+	FT_Library ft;
+	if (FT_Init_FreeType(&ft))
+	{
+		fmt::println("Could not initialize FreeType library");
+		return;
+	}
+
+	FT_Face face;
+	if (FT_New_Face(ft, fontPath, 0, &face))
+	{
+		fmt::println("Failed to load font {}", fontPath);
+		return;
+	}
+
+	FT_Set_Pixel_Sizes(face, 0, fontSize);
+
+	// 1. Determine total area required for all glyphs and max dimensions
+	unsigned int totalArea = 0;
+	unsigned int maxGlyphWidth = 0, maxGlyphHeight = 0;
+
+	for (unsigned int c = 32; c < 128; c++)
+	{
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+		{
+			fmt::println("Failed to load glyph: {:c}", c);
+			continue;
+		}
+
+		FT_Bitmap &bitmap = face->glyph->bitmap;
+		if (bitmap.width == 0 || bitmap.rows == 0) continue; // Skip empty glyphs
+
+		totalArea += bitmap.width * bitmap.rows;
+
+		maxGlyphWidth = std::max(maxGlyphWidth, bitmap.width);
+		maxGlyphHeight = std::max(maxGlyphHeight, bitmap.rows);
+	}
+
+	// 2. Estimate optimal texture size
+	unsigned int estimatedSize = std::ceil(std::sqrt(totalArea)) * 1.2f; // Add extra 20% padding
+	estimatedSize = std::max(estimatedSize, std::max(maxGlyphWidth, maxGlyphHeight)); // Ensure it fits at least one glyph
+
+	// Round up to the nearest power of 2
+	*width = *height = 1;
+	while (*width < estimatedSize) *width *= 2;
+	while (*height < estimatedSize) *height *= 2;
+
+	buffer = new unsigned char[(*width) * (*height) * 4];
+	memset(buffer, 0, (*width) * (*height) * 4);
+
+	// 3. Pack Glyphs Using Shelf Packing Algorithm
+	unsigned int xOffset = 0, yOffset = 0, currentRowHeight = 0;
+	glyphs = new std::map<char, Glyph>{};
+
+	for (unsigned int c = 32; c < 128; c++)
+	{
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+			continue;
+
+		FT_Bitmap &bitmap = face->glyph->bitmap;
+		if (bitmap.width == 0 || bitmap.rows == 0) continue;
+
+		// If the glyph doesn't fit in the current row, move to the next row
+		if (xOffset + bitmap.width > *width)
+		{
+			xOffset = 0;
+			yOffset += currentRowHeight;
+			currentRowHeight = 0;
+		}
+
+		if (yOffset + bitmap.rows > *height)
+		{
+			fmt::println("Warning: Texture size underestimated; some glyphs may not fit.");
+			break; // If we exceed the buffer, we stop adding glyphs
+		}
+
+		// Copy glyph bitmap to atlas buffer
+		for (unsigned int y = 0; y < bitmap.rows; y++)
+		{
+			for (unsigned int x = 0; x < bitmap.width; x++)
+			{
+				unsigned int bufferIndex = ((yOffset + y) * (*width) + (xOffset + x)) * 4;
+				unsigned char alpha = bitmap.buffer[y * bitmap.pitch + x];
+
+				buffer[bufferIndex + 0] = 255;   // R
+				buffer[bufferIndex + 1] = 255;   // G
+				buffer[bufferIndex + 2] = 255;   // B
+				buffer[bufferIndex + 3] = alpha; // A
+			}
+		}
+
+		// Store glyph metadata
+		(*glyphs)[c] =
+		{
+			glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			glm::vec2(bitmap.width, bitmap.rows),
+			glm::vec2(float(xOffset) / *width, float(yOffset) / *height),
+			glm::vec2(float(xOffset + bitmap.width) / *width, float(yOffset + bitmap.rows) / *height),
+			float(face->glyph->advance.x >> 6)
+		};
+
+		// Move to next position
+		xOffset += bitmap.width;
+		currentRowHeight = std::max(currentRowHeight, bitmap.rows);
+	}
+
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
+}
+
 void Texture::createTexture()
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &id);
@@ -274,6 +385,14 @@ Texture::Texture(const std::string &svgData, float percent, unsigned int maxInst
 : maxInstances(maxInstances), currentInstance(0)
 {
 	Texture::getPixelDataSVGPercentRAW(svgData, pixelData, percent, &width, &height);
+	createTexture();
+	createBuffers(0);
+}
+
+Texture::Texture(const char *fontPath, unsigned int fontSize, std::map<char, gui::Glyph> *& glyphs, unsigned int maxInstances)
+: maxInstances(maxInstances), currentInstance(0)
+{
+	Texture::getPixelDataFont(fontPath, fontSize, glyphs, pixelData, &width, &height);
 	createTexture();
 	createBuffers(0);
 }
