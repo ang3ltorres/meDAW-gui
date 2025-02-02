@@ -232,42 +232,37 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std:
 
 	FT_Set_Pixel_Sizes(face, 0, fontSize);
 
-	// 1. Determine total area required for all glyphs and max dimensions
-	unsigned int totalArea = 0;
+	// Determine texture size
 	unsigned int maxGlyphWidth = 0, maxGlyphHeight = 0;
-
+	unsigned int totalWidth = 0, currentRowHeight = 0;
 	for (unsigned int c = 32; c < 128; c++)
 	{
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-		{
-			fmt::println("Failed to load glyph: {:c}", c);
 			continue;
-		}
 
 		FT_Bitmap &bitmap = face->glyph->bitmap;
-		if (bitmap.width == 0 || bitmap.rows == 0) continue; // Skip empty glyphs
-
-		totalArea += bitmap.width * bitmap.rows;
-
 		maxGlyphWidth = std::max(maxGlyphWidth, bitmap.width);
 		maxGlyphHeight = std::max(maxGlyphHeight, bitmap.rows);
+
+		totalWidth += bitmap.width + 2; // Add padding between glyphs
+		if (totalWidth > 1024) // New row if exceeds maximum width
+		{
+			totalWidth = bitmap.width + 2;
+			currentRowHeight += maxGlyphHeight + 2;
+		}
 	}
+	currentRowHeight += maxGlyphHeight; // Add final row height
 
-	// 2. Estimate optimal texture size
-	unsigned int estimatedSize = std::ceil(std::sqrt(totalArea)) * 1.2f; // Add extra 20% padding
-	estimatedSize = std::max(estimatedSize, std::max(maxGlyphWidth, maxGlyphHeight)); // Ensure it fits at least one glyph
+	// Set texture size
+	*width = 1024; // Fixed atlas width
+	*height = currentRowHeight + 2; // Add padding for last row
 
-	// Round up to the nearest power of 2
-	*width = *height = 1;
-	while (*width < estimatedSize) *width *= 2;
-	while (*height < estimatedSize) *height *= 2;
-
+	// Initialize texture buffer
 	buffer = new unsigned char[(*width) * (*height) * 4];
 	memset(buffer, 0, (*width) * (*height) * 4);
 
-	// 3. Pack Glyphs Using Shelf Packing Algorithm
-	unsigned int xOffset = 0, yOffset = 0, currentRowHeight = 0;
 	glyphs = new std::map<char, Glyph>{};
+	unsigned int xOffset = 0, yOffset = 0, rowHeight = 0;
 
 	for (unsigned int c = 32; c < 128; c++)
 	{
@@ -275,23 +270,14 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std:
 			continue;
 
 		FT_Bitmap &bitmap = face->glyph->bitmap;
-		if (bitmap.width == 0 || bitmap.rows == 0) continue;
-
-		// If the glyph doesn't fit in the current row, move to the next row
 		if (xOffset + bitmap.width > *width)
 		{
 			xOffset = 0;
-			yOffset += currentRowHeight;
-			currentRowHeight = 0;
+			yOffset += rowHeight + 2;
+			rowHeight = 0;
 		}
 
-		if (yOffset + bitmap.rows > *height)
-		{
-			fmt::println("Warning: Texture size underestimated; some glyphs may not fit.");
-			break; // If we exceed the buffer, we stop adding glyphs
-		}
-
-		// Copy glyph bitmap to atlas buffer
+		// Copy bitmap to texture buffer
 		for (unsigned int y = 0; y < bitmap.rows; y++)
 		{
 			for (unsigned int x = 0; x < bitmap.width; x++)
@@ -306,18 +292,16 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std:
 			}
 		}
 
-		// Store glyph metadata
-		(*glyphs)[c] =
-		{
-			glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),  // Bearing
-			glm::vec2(bitmap.width, bitmap.rows),                          // Size
-			glm::ivec2(xOffset, yOffset),                                  // NEW: Absolute atlas position
-			float(face->glyph->advance.x >> 6)                             // Advance
+		// Store glyph data
+		(*glyphs)[c] = {
+			glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			glm::vec2(bitmap.width, bitmap.rows),
+			glm::ivec2(xOffset, yOffset),
+			float(face->glyph->advance.x >> 6)
 		};
 
-		// Move to next position
-		xOffset += bitmap.width;
-		currentRowHeight = std::max(currentRowHeight, bitmap.rows);
+		xOffset += bitmap.width + 2; // Move to next position
+		rowHeight = std::max(rowHeight, bitmap.rows);
 	}
 
 	FT_Done_Face(face);

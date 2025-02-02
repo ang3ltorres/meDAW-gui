@@ -11,9 +11,29 @@ int main()
 
 	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
 
-	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 90};
+	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 48};
 
-	gui::Text *text = new gui::Text{font, "EXAMPLE TEXTa"};
+	// auto it = font->glyphs->find('p');
+	// const gui::Glyph &glyph = it->second;
+	// font->src =
+	// {
+	// 	glyph.atlasPos.x,
+	// 	glyph.atlasPos.y,
+	// 	glyph.size.x,
+	// 	glyph.size.y
+	// };
+
+	// font->dst =
+	// {
+	// 	128,
+	// 	128,
+	// 	glyph.size.x,
+	// 	glyph.size.y
+	// };
+
+	// font->updateModel();
+
+	gui::Text *text = new gui::Text{font, "este es un texto de ejemplo"};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -36,8 +56,8 @@ int main()
 		// Render to target
 		gui::Graphics::setRenderTexture(renderTexture);
 		gui::Graphics::clearScreen({0, 0, 0});
-		rect->sprite->batch();
-		rect->sprite->texture->draw();
+		// rect->sprite->batch();
+		// rect->sprite->texture->draw();
 
 		// Render to default "canvas"
 		gui::Graphics::setRenderTexture();
