@@ -4,24 +4,25 @@
 
 using namespace gui;
 
-Text::Text(Font *font, const char *text)
-: font(font), renderTexture(nullptr)
+Text::Text(Font *font, const char *text, float gap)
+: font(font), renderTexture(nullptr), gap(gap)
 {
 	render(text);
 }
 
 void Text::render(const char *text)
 {
-	// Step 1: Calculate required texture size
+	// Precalculate required texture size
 	float width = 0.0f;
 	float maxHeight = 0.0f;
-	float minY = 0.0f; // To track the lowest point (descender)
+	float minY = 0.0f;
 
 	float scale = 1.0f;
 
 	for (const char *c = text; *c; c++)
 	{
 		if (*c == ' ') {
+
 			width += font->fontSize * 0.25f;
 			continue;
 		}
@@ -35,12 +36,11 @@ void Text::render(const char *text)
 		width += glyph.advance * scale;
 
 		// Calculate the max height considering the top and bottom bearings
-		float glyphTop = glyph.bearing.y;                            // Top of the glyph relative to baseline
-		float glyphBottom = glyph.bearing.y - glyph.size.y;          // Bottom of the glyph relative to baseline
+		float glyphTop = glyph.bearing.y;
+		float glyphBottom = glyph.bearing.y - glyph.size.y;
 
 		// Update max height for the tallest glyphs
 		maxHeight = std::max(maxHeight, glyphTop * scale);
-		
 		// Update minY for the lowest point (descender)
 		minY = std::min(minY, glyphBottom * scale);
 	}
@@ -51,11 +51,11 @@ void Text::render(const char *text)
 	textureWidth  = std::max(textureWidth, 1u); // Ensure non-zero size
 	textureHeight = std::max(textureHeight, 1u);
 
-	// Step 2: Create or update the RenderTexture
-	delete renderTexture; // Delete the old texture to avoid memory leaks
+	// Create or update the RenderTexture
+	delete renderTexture;
 	renderTexture = new gui::RenderTexture{textureWidth, textureHeight};
 
-	// Step 3: Bind the FBO to draw text into the render texture
+	// Bind the RenderTexture to draw text into it
 	Graphics::setRenderTexture(renderTexture);
 
 	float x = 0.0f;
@@ -64,7 +64,7 @@ void Text::render(const char *text)
 	{
 		if (*c == ' ')
 		{
-			x += font->fontSize * 0.25f; // Advance for space character
+			x += font->fontSize * 0.25f; //  Space character advance
 			continue;
 		}
 
@@ -97,16 +97,16 @@ void Text::render(const char *text)
 		font->batch();
 
 		// Advance the cursor for the next glyph
-		x += glyph.advance * scale;
+		x += glyph.advance * scale * gap;
 	}
 
 	// Draw all batched glyphs
 	font->texture->draw();
 
 	// Reset font texture coordinates for the full texture
-	font->src = {0, 0, font->texture->width, font->texture->height};
-	font->dst = {0, 0, font->texture->width, font->texture->height};
-	font->updateModel();
+	// font->src = {0, 0, font->texture->width, font->texture->height};
+	// font->dst = {0, 0, font->texture->width, font->texture->height};
+	// font->updateModel();
 
 	// Step 4: Unbind the FBO
 	Graphics::setRenderTexture();

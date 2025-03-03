@@ -11,7 +11,7 @@ int main()
 
 	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
 
-	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 48};
+	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 90};
 
 	// auto it = font->glyphs->find('p');
 	// const gui::Glyph &glyph = it->second;
@@ -33,7 +33,7 @@ int main()
 
 	// font->updateModel();
 
-	gui::Text *text = new gui::Text{font, "este es un texto de ejemplo"};
+	gui::Text *text = new gui::Text{font, "ESte 3s Un texto largo 32 + 32 = 64"};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;

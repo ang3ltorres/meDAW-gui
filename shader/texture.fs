@@ -13,6 +13,7 @@ void main()
 	{
 		case 0:
 			FragColor = texture(u_Texture, TexCoord) * TintColor;
+			
 			break;
 
 		case 1:
@@ -20,8 +21,8 @@ void main()
 			break;
 
 		case 2:
-			float color = texture(u_Texture, TexCoord).r;
-			FragColor = vec4(color, color, color, color) * TintColor;
+			float alpha = texture(u_Texture, TexCoord).a;
+			FragColor = vec4(TintColor.rgb, alpha);
 			break;
 	}
 }

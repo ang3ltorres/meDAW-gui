@@ -217,19 +217,11 @@ void Texture::getPixelDataSVGPercentRAW(const std::string &svgData, unsigned cha
 void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std::map<char, gui::Glyph> *&glyphs, unsigned char *&buffer, unsigned int *width, unsigned int *height)
 {
 	FT_Library ft;
-	if (FT_Init_FreeType(&ft))
-	{
-		fmt::println("Could not initialize FreeType library");
-		return;
-	}
+	FT_Init_FreeType(&ft);
 
 	FT_Face face;
-	if (FT_New_Face(ft, fontPath, 0, &face))
-	{
-		fmt::println("Failed to load font {}", fontPath);
-		return;
-	}
-
+	FT_New_Face(ft, fontPath, 0, &face);
+	
 	FT_Set_Pixel_Sizes(face, 0, fontSize);
 
 	// Determine texture size
@@ -377,7 +369,7 @@ Texture::Texture(const char *fontPath, unsigned int fontSize, std::map<char, gui
 {
 	Texture::getPixelDataFont(fontPath, fontSize, glyphs, pixelData, &width, &height);
 	createTexture();
-	createBuffers(0);
+	createBuffers(2);
 }
 
 Texture::Texture(unsigned int width, unsigned int height, unsigned int maxInstances)
