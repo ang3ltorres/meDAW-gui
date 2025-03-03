@@ -214,7 +214,7 @@ void Texture::getPixelDataSVGPercentRAW(const std::string &svgData, unsigned cha
 	plutosvg_document_destroy(document);
 }
 
-void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std::map<char, gui::Glyph> *&glyphs, unsigned char *&buffer, unsigned int *width, unsigned int *height)
+void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, Glyph *glyphs, unsigned char *&buffer, unsigned int *width, unsigned int *height)
 {
 	FT_Library ft;
 	FT_Init_FreeType(&ft);
@@ -253,7 +253,6 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std:
 	buffer = new unsigned char[(*width) * (*height) * 4];
 	memset(buffer, 0, (*width) * (*height) * 4);
 
-	glyphs = new std::map<char, Glyph>{};
 	unsigned int xOffset = 0, yOffset = 0, rowHeight = 0;
 
 	for (unsigned int c = 32; c < 128; c++)
@@ -285,7 +284,8 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, std:
 		}
 
 		// Store glyph data
-		(*glyphs)[c] = {
+		glyphs[c - 32] =
+		{
 			glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 			glm::vec2(bitmap.width, bitmap.rows),
 			glm::ivec2(xOffset, yOffset),
@@ -364,7 +364,7 @@ Texture::Texture(const std::string &svgData, float percent, unsigned int maxInst
 	createBuffers(0);
 }
 
-Texture::Texture(const char *fontPath, unsigned int fontSize, std::map<char, gui::Glyph> *& glyphs, unsigned int maxInstances)
+Texture::Texture(const char *fontPath, unsigned int fontSize, Glyph *glyphs, unsigned int maxInstances)
 : maxInstances(maxInstances), currentInstance(0)
 {
 	Texture::getPixelDataFont(fontPath, fontSize, glyphs, pixelData, &width, &height);

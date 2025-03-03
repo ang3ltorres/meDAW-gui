@@ -8,6 +8,5 @@ Font::Font(const char *fontPath, unsigned int fontSize)
 
 Font::~Font()
 {
-	delete glyphs;
 	delete texture;
 }

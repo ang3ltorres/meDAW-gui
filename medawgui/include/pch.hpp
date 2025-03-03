@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include <bitset>
-#include <map>
 
 // OpenGL
 #define GLFW_INCLUDE_NONE

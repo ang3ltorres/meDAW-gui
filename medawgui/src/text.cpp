@@ -27,11 +27,7 @@ void Text::render(const char *text)
 			continue;
 		}
 
-		auto it = font->glyphs->find(*c);
-		if (it == font->glyphs->end())
-			continue;
-
-		const gui::Glyph &glyph = it->second;
+		const gui::Glyph &glyph = font->glyphs[*c - 32];
 
 		width += glyph.advance * scale;
 
@@ -68,11 +64,7 @@ void Text::render(const char *text)
 			continue;
 		}
 
-		auto it = font->glyphs->find(*c);
-		if (it == font->glyphs->end())
-			continue;
-
-		const gui::Glyph &glyph = it->second;
+		const gui::Glyph &glyph = font->glyphs[*c - 32];
 
 		// Setup texture coordinates (UVs from the atlas)
 		font->src =

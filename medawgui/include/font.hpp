@@ -14,7 +14,7 @@ namespace gui
 		Font(const Font &) = delete;
 		~Font();
 
-		std::map<char, Glyph> *glyphs;
+		Glyph glyphs[96]; // Printable characters (32 - 127)
 		unsigned int fontSize;
 	};
 }
