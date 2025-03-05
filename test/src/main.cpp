@@ -11,7 +11,7 @@ int main()
 
 	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
 
-	gui::Font *font = new gui::Font{"/home/angel/meDAW-res/mononoki-Regular.ttf", 90};
+	gui::Font *font = new gui::Font{"../font/mononoki-Bold.ttf", 90};
 
 	// auto it = font->glyphs->find('p');
 	// const gui::Glyph &glyph = it->second;
@@ -33,7 +33,7 @@ int main()
 
 	// font->updateModel();
 
-	gui::Text *text = new gui::Text{font, "ESte 3s Un texto largo 32 + 32 = 64"};
+	gui::Text *text = new gui::Text{font, "Hello world!!"};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -55,9 +55,9 @@ int main()
 
 		// Render to target
 		gui::Graphics::setRenderTexture(renderTexture);
-		gui::Graphics::clearScreen({0, 0, 0});
-		// rect->sprite->batch();
-		// rect->sprite->texture->draw();
+		gui::Graphics::clearScreen({255, 0, 255});
+		rect->sprite->batch();
+		rect->sprite->texture->draw();
 
 		// Render to default "canvas"
 		gui::Graphics::setRenderTexture();

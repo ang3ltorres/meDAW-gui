@@ -60,6 +60,7 @@ cmake \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D BUILD_UTILS=OFF \
 	-D OpenGL_GL_PREFERENCE=GLVND \
+	-Wno-dev \
 	../../extract/glew-2.2.0/build/cmake
 
 make -j $cores
