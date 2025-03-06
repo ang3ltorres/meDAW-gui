@@ -20,21 +20,35 @@ buildPath="$rootDir/build/dep/build"
 includePath="$rootDir/build/dep/include"
 libPath="$rootDir/build/dep/bin"
 
-mkdir -p $downloadPath $extractPath $buildPath $includePath $libPath
+if [[ -f "$rootDir/build/dep/done" ]]; then
+	echo "Files already downloaded and extracted"
+	echo "Rebuilding dependencies..."
 
-echo "Downloading glfw3";    wget -P "$downloadPath" https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz  > /dev/null 2>&1
-echo "Downloading glew";     wget -P "$downloadPath" -O "$downloadPath/glew-2.2.0.tar.gz" https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz  > /dev/null 2>&1
-echo "Downloading glm";      wget -P "$downloadPath" https://github.com/g-truc/glm/archive/refs/tags/1.0.1.tar.gz  > /dev/null 2>&1
-echo "Downloading fmt";      wget -P "$downloadPath" https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.tar.gz  > /dev/null 2>&1
-echo "Downloading zlib";     wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
-echo "Downloading libpng";   wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
-echo "Downloading freetype"; wget -P "$downloadPath" https://download.savannah.gnu.org/releases/freetype/freetype-2.13.3.tar.gz > /dev/null 2>&1
-echo "Downloading plutosvg"; wget -P "$downloadPath" https://github.com/sammycage/plutosvg/archive/refs/tags/v0.0.4.tar.gz  > /dev/null 2>&1
+	rm -rf $buildPath $includePath $libPath
+	mkdir -p $buildPath $includePath $libPath
 
-for file in "$downloadPath"/*.tar.gz; do
-	echo "Extracting $file"
-	tar -xvf "$file" -C "$extractPath" > /dev/null 2>&1
-done
+else
+	mkdir -p $downloadPath $extractPath $buildPath $includePath $libPath
+
+	# Download dependencies
+	echo "Downloading glfw3";    wget -P "$downloadPath" https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz  > /dev/null 2>&1
+	echo "Downloading glew";     wget -P "$downloadPath" -O "$downloadPath/glew-2.2.0.tar.gz" https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz  > /dev/null 2>&1
+	echo "Downloading glm";      wget -P "$downloadPath" https://github.com/g-truc/glm/archive/refs/tags/1.0.1.tar.gz  > /dev/null 2>&1
+	echo "Downloading fmt";      wget -P "$downloadPath" https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.tar.gz  > /dev/null 2>&1
+	echo "Downloading zlib";     wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
+	echo "Downloading libpng";   wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
+	echo "Downloading freetype"; wget -P "$downloadPath" https://download.savannah.gnu.org/releases/freetype/freetype-2.13.3.tar.gz > /dev/null 2>&1
+	echo "Downloading plutosvg"; wget -P "$downloadPath" https://github.com/sammycage/plutosvg/archive/refs/tags/v0.0.4.tar.gz  > /dev/null 2>&1
+
+	# Extract downloaded dependencies
+	for file in "$downloadPath"/*.tar.gz; do
+		echo "Extracting $file"
+		tar -xvf "$file" -C "$extractPath" > /dev/null 2>&1
+	done
+
+	# Create download & extraction flag
+	touch $rootDir/build/dep/done
+fi
 
 ## GLFW3
 cd $buildPath; mkdir glfw3; cd glfw3
