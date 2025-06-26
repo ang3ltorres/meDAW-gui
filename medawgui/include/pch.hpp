@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <string>
 #include <bitset>
+#include <functional>
+#include <vector>
 
 // OpenGL
 #define GLFW_INCLUDE_NONE
