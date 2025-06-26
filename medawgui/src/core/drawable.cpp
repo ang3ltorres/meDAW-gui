@@ -1,6 +1,6 @@
-#include "drawable.hpp"
+#include "core/drawable.hpp"
 
-#include "graphics.hpp"
+#include "core/graphics.hpp"
 
 using namespace gui;
 using namespace glm;

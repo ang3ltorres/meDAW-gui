@@ -1,4 +1,4 @@
-#include "renderTexture.hpp"
+#include "core/renderTexture.hpp"
 
 using namespace gui;
 using namespace glm;

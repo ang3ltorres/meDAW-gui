@@ -2,8 +2,8 @@
 
 #include "pch.hpp"
 
-#include "shader.hpp"
-#include "glyph.hpp"
+#include "core/shader.hpp"
+#include "core/glyph.hpp"
 
 namespace gui
 {

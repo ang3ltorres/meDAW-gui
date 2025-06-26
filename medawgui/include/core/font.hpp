@@ -2,8 +2,8 @@
 
 #include "pch.hpp"
 
-#include "drawable.hpp"
-#include "glyph.hpp"
+#include "core/drawable.hpp"
+#include "core/glyph.hpp"
 
 namespace gui
 {

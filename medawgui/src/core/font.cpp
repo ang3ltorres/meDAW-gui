@@ -1,4 +1,4 @@
-#include "font.hpp"
+#include "core/font.hpp"
 
 using namespace gui;
 

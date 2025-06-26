@@ -1,4 +1,4 @@
-#include "shader.hpp"
+#include "core/shader.hpp"
 
 using namespace gui;
 

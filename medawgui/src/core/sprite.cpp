@@ -1,4 +1,4 @@
-#include "sprite.hpp"
+#include "core/sprite.hpp"
 
 using namespace gui;
 using namespace glm;

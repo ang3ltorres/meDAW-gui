@@ -1,4 +1,4 @@
-#include "graphics.hpp"
+#include "core/graphics.hpp"
 
 using namespace gui;
 

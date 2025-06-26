@@ -2,8 +2,8 @@
 
 #include "pch.hpp"
 
-#include "drawable.hpp"
-#include "camera.hpp"
+#include "core/drawable.hpp"
+#include "core/camera.hpp"
 
 namespace gui
 {

@@ -1,4 +1,4 @@
-#include "input.hpp"
+#include "core/input.hpp"
 
 std::bitset<512> Input::keyboardStates;
 

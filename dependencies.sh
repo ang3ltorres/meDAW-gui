@@ -174,7 +174,7 @@ cmake \
 	../../extract/plutosvg-0.0.4
 
 make -j $cores
-cd $buildPath/plutosvg/_deps/plutovg-build; mv libplutovg.so libplutovg.so.0 $libPath
+cd $buildPath/plutosvg/_deps/plutovg-build; mv libplutovg.so* $libPath
 cd $buildPath/plutosvg; mv libplutosvg.so libplutosvg.so.0 $libPath
 cp $buildPath/plutosvg/_deps/plutovg-src/include/plutovg.h $includePath/.
 cp $extractPath/plutosvg-0.0.4/source/plutosvg.h $includePath/.

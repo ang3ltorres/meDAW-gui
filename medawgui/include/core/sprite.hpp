@@ -2,7 +2,7 @@
 
 #include "pch.hpp"
 
-#include "drawable.hpp"
+#include "core/drawable.hpp"
 
 namespace gui
 {

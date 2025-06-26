@@ -2,14 +2,14 @@
 
 #include "pch.hpp"
 
-#include "color.hpp"
-#include "input.hpp"
-#include "shader.hpp"
-#include "camera.hpp"
-#include "texture.hpp"
-#include "sprite.hpp"
-#include "renderTexture.hpp"
-#include "text.hpp"
+#include "core/color.hpp"
+#include "core/input.hpp"
+#include "core/shader.hpp"
+#include "core/camera.hpp"
+#include "core/texture.hpp"
+#include "core/sprite.hpp"
+#include "core/renderTexture.hpp"
+#include "core/text.hpp"
 
 #include "gui/shapes.hpp"
 #include "gui/palette.hpp"

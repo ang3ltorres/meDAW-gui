@@ -2,8 +2,8 @@
 
 #include "pch.hpp"
 
-#include "color.hpp"
-#include "texture.hpp"
+#include "core/color.hpp"
+#include "core/texture.hpp"
 
 namespace gui
 {

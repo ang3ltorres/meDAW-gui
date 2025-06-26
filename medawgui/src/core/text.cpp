@@ -1,6 +1,6 @@
-#include "text.hpp"
+#include "core/text.hpp"
 
-#include "graphics.hpp"
+#include "core/graphics.hpp"
 
 using namespace gui;
 
@@ -44,7 +44,8 @@ void Text::render(const char *text)
 	unsigned int textureWidth  = (unsigned int)std::ceil(width);
 	unsigned int textureHeight = (unsigned int)std::ceil(maxHeight - minY);
 
-	textureWidth  = std::max(textureWidth, 1u); // Ensure non-zero size
+	// Ensure non-zero size
+	textureWidth  = std::max(textureWidth, 1u);
 	textureHeight = std::max(textureHeight, 1u);
 
 	// Create or update the RenderTexture

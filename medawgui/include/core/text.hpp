@@ -2,8 +2,8 @@
 
 #include "pch.hpp"
 
-#include "renderTexture.hpp"
-#include "font.hpp"
+#include "core/renderTexture.hpp"
+#include "core/font.hpp"
 
 namespace gui
 {

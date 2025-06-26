@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics.hpp"
+#include "core/graphics.hpp"
 
 namespace gui::shape
 {

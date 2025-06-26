@@ -1,6 +1,6 @@
-#include "texture.hpp"
+#include "core/texture.hpp"
 
-#include "graphics.hpp"
+#include "core/graphics.hpp"
 
 using namespace gui;
 
