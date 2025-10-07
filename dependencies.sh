@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 # libgl1-mesa-dev
 # libglu1-mesa-dev
 # libwayland-dev
@@ -37,7 +39,7 @@ else
 	echo "Downloading fmt";      wget -P "$downloadPath" https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.tar.gz  > /dev/null 2>&1
 	echo "Downloading zlib";     wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
 	echo "Downloading libpng";   wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
-	echo "Downloading freetype"; wget -P "$downloadPath" https://download.savannah.gnu.org/releases/freetype/freetype-2.13.3.tar.gz > /dev/null 2>&1
+	echo "Downloading freetype"; wget -P "$downloadPath" -O "$downloadPath/freetype-2.13.3.tar.gz" https://netactuate.dl.sourceforge.net/project/freetype/freetype2/2.13.3/freetype-2.13.3.tar.gz?viasf=1 > /dev/null 2>&1
 	echo "Downloading plutosvg"; wget -P "$downloadPath" https://github.com/sammycage/plutosvg/archive/refs/tags/v0.0.4.tar.gz  > /dev/null 2>&1
 
 	# Extract downloaded dependencies
