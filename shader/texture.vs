@@ -27,15 +27,8 @@ layout(std140, binding = 0) uniform GPU_UBO_buffer_shared
 	GPU_UBO global_data;
 };
 
-//* Texture type UBO_Shared non-shared *//
-layout(std140, binding = 1) uniform GPU_UBO_buffer_nonshared
-{
-	int Type_in;
-};
-
 out vec4 tint;
 out vec2 TexCoord;
-out flat int Type;
 
 void main()
 {
@@ -45,5 +38,4 @@ void main()
 	gl_Position = global_data.ViewProjection * common_data.model * vec4(aPos, 0.0, 1.0);
 	
 	tint = common_data.tint / 255.0;
-	Type = Type_in;
 }
