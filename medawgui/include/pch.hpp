@@ -8,15 +8,14 @@
 #include <bitset>
 #include <functional>
 #include <vector>
+#include <format>
+#include <print>
 
 // OpenGL
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
-
-// FMT
-#include <fmt/printf.h>
 
 // PNG
 #include <png.h>

@@ -1,7 +1,5 @@
 #include "core/graphics.hpp"
 
-#include "widget/button.hpp"
-
 int main()
 {
 	unsigned int width = 1280;
@@ -11,11 +9,7 @@ int main()
 	
 	gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
 
-	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
-
 	gui::Font *font = new gui::Font{"../font/mononoki-Bold.ttf", 90};
-
-	gui::widget::Button *button = new gui::widget::Button{{32, 32}, {50,50}, 1, nullptr};
 
 	// auto it = font->glyphs->find('p');
 	// const gui::Glyph &glyph = it->second;
@@ -37,7 +31,7 @@ int main()
 
 	// font->updateModel();
 
-	gui::Text *text = new gui::Text{font, "Hello world!!"};
+	gui::Text *text = new gui::Text{font, "Hello world!! que para"};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -61,9 +55,6 @@ int main()
 		gui::Graphics::setRenderTexture(renderTexture);
 		gui::Graphics::clearScreen({255, 0, 255});
 
-		button->rect->sprite->batch();
-		button->rect->sprite->texture->draw();
-
 		//rect->sprite->batch();
 		//rect->sprite->texture->draw();
 
@@ -77,8 +68,8 @@ int main()
 		// font->batch();
 		// font->texture->draw();
 
-		//text->renderTexture->batch();
-		//text->renderTexture->texture->draw();
+		text->renderTexture->batch();
+		text->renderTexture->texture->draw();
 
 		// svgSprite->batch();
 		// svgSprite->texture->draw();
@@ -90,7 +81,6 @@ int main()
 	}
 
 	delete font;
-	delete rect;
 	delete renderTexture;
 
 	gui::Graphics::finalize();

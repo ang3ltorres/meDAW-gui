@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(medaw VERSION 0.0.1 LANGUAGES CXX)
 
 # C++ Standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -34,7 +34,6 @@ target_link_directories(medawgui PUBLIC
 target_link_libraries(medawgui PUBLIC
 	glfw
 	GLEW
-	fmt
 	freetype
 	png
 	plutosvg

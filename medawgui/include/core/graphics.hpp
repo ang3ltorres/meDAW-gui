@@ -11,7 +11,6 @@
 #include "core/renderTexture.hpp"
 #include "core/text.hpp"
 
-#include "gui/shapes.hpp"
 #include "gui/palette.hpp"
 
 namespace gui

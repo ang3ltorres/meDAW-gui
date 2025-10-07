@@ -36,7 +36,6 @@ else
 	echo "Downloading glfw3";    wget -P "$downloadPath" https://github.com/glfw/glfw/archive/refs/tags/3.4.tar.gz  > /dev/null 2>&1
 	echo "Downloading glew";     wget -P "$downloadPath" -O "$downloadPath/glew-2.2.0.tar.gz" https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz  > /dev/null 2>&1
 	echo "Downloading glm";      wget -P "$downloadPath" https://github.com/g-truc/glm/archive/refs/tags/1.0.1.tar.gz  > /dev/null 2>&1
-	echo "Downloading fmt";      wget -P "$downloadPath" https://github.com/fmtlib/fmt/archive/refs/tags/11.1.2.tar.gz  > /dev/null 2>&1
 	echo "Downloading zlib";     wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
 	echo "Downloading libpng";   wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
 	echo "Downloading freetype"; wget -P "$downloadPath" -O "$downloadPath/freetype-2.13.3.tar.gz" https://netactuate.dl.sourceforge.net/project/freetype/freetype2/2.13.3/freetype-2.13.3.tar.gz?viasf=1 > /dev/null 2>&1
@@ -85,22 +84,6 @@ cp -r "${extractPath}/glew-2.2.0/include/GL" $includePath/.
 
 ## GLM
 cp -r "${extractPath}/glm-1.0.1/glm" $includePath/.
-
-## FMT
-cd $buildPath; mkdir fmt; cd fmt
-
-cmake \
-	-G "Unix Makefiles" \
-	-D CMAKE_BUILD_TYPE=Release \
-	-D BUILD_SHARED_LIBS=ON \
-	-D FMT_DOC=OFF \
-	-D FMT_INSTALL=OFF \
-	-D FMT_TEST=OFF \
-	../../extract/fmt-11.1.2
-
-make -j $cores
-mv libfmt.so libfmt.so.11 libfmt.so.11.1.2 $libPath
-cp -r "${extractPath}/fmt-11.1.2/include/fmt" $includePath/.
 
 ## ZLIB
 cd $buildPath; mkdir zlib; cd zlib
