@@ -11,22 +11,21 @@ namespace gui
 		Widget(const Widget&) = delete;
 		~Widget() = default;
 
-		std::vector<gui::Texture*> texture;
 		glm::ivec2 pos;
 		glm::uvec2 size;
+		std::vector<gui::Texture*> texture;
 
 		virtual void draw() = 0;
 	};
 
-	struct Pane
+	class Pane
 	{
-		std::vector<Widget> widget;
+	public:
+		Pane(const glm::ivec2& pos, const glm::uvec2& size, const std::string& name = "DEFAULT");
+
 		glm::ivec2 pos;
 		glm::uvec2 size;
+		std::string name;
+		std::vector<Widget> widget;
 	};
-
-	void initialize();
-	void finalize();
-
-	extern std::vector<Pane> pane;
 }

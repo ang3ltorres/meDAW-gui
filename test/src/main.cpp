@@ -4,6 +4,7 @@ int main()
 {
 	unsigned int width = 1280;
 	unsigned int height = 720;
+
 	
 	gui::Graphics::initialize(width, height, "OpenGL");
 	
