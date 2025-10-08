@@ -39,7 +39,8 @@ else
 	echo "Downloading zlib";     wget -P "$downloadPath" https://zlib.net/zlib-1.3.1.tar.gz  > /dev/null 2>&1
 	echo "Downloading libpng";   wget -P "$downloadPath" https://download.sourceforge.net/libpng/libpng-1.6.45.tar.gz  > /dev/null 2>&1
 	echo "Downloading freetype"; wget -P "$downloadPath" -O "$downloadPath/freetype-2.13.3.tar.gz" https://netactuate.dl.sourceforge.net/project/freetype/freetype2/2.13.3/freetype-2.13.3.tar.gz?viasf=1 > /dev/null 2>&1
-	echo "Downloading plutosvg"; wget -P "$downloadPath" https://github.com/sammycage/plutosvg/archive/refs/tags/v0.0.4.tar.gz  > /dev/null 2>&1
+	echo "Downloading plutovg"; wget -P "$downloadPath" https://github.com/sammycage/plutovg/archive/refs/tags/v1.3.1.tar.gz  > /dev/null 2>&1
+	echo "Downloading plutosvg"; wget -P "$downloadPath" https://github.com/sammycage/plutosvg/archive/refs/tags/v0.0.7.tar.gz  > /dev/null 2>&1
 
 	# Extract downloaded dependencies
 	for file in "$downloadPath"/*.tar.gz; do
@@ -147,6 +148,11 @@ mv libfreetype.so libfreetype.so.6 libfreetype.so.6.20.2 $libPath
 cd $extractPath/freetype-2.13.3/include; cp -r --preserve=all ./ $includePath/.
 cd $buildPath/freetype/include/freetype/config; cp *.h $includePath/freetype/config/.
 
+## PLUTOVG
+# We only do extract
+rm -rf $extractPath/plutosvg-0.0.7/plutovg
+mv $extractPath/plutovg-1.3.1 $extractPath/plutosvg-0.0.7/plutovg
+
 ## PLUTOSVG
 cd $buildPath; mkdir plutosvg; cd plutosvg
 
@@ -156,11 +162,11 @@ cmake \
 	-D BUILD_SHARED_LIBS=ON \
 	-D PLUTOVG_BUILD_EXAMPLES=OFF \
 	-D PLUTOSVG_BUILD_EXAMPLES=OFF \
-	../../extract/plutosvg-0.0.4
+	../../extract/plutosvg-0.0.7
 
 make -j $cores
-cd $buildPath/plutosvg/_deps/plutovg-build; mv libplutovg.so* $libPath
+cd $buildPath/plutosvg/plutovg; mv libplutovg.so* $libPath
 cd $buildPath/plutosvg; mv libplutosvg.so libplutosvg.so.0 $libPath
-cp $buildPath/plutosvg/_deps/plutovg-src/include/plutovg.h $includePath/.
-cp $extractPath/plutosvg-0.0.4/source/plutosvg.h $includePath/.
+cp $extractPath/plutosvg-0.0.7/plutovg/include/plutovg.h $includePath/.
+cp $extractPath/plutosvg-0.0.7/source/plutosvg.h $includePath/.
 
