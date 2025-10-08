@@ -52,7 +52,7 @@ int main()
 		text->renderTexture->dst.y += 1.0f;
 		text->renderTexture->updateModel();
 
-		if (Input::keyboardStates[GLFW_KEY_ESCAPE])
+		if (Event::keyboardStates[GLFW_KEY_ESCAPE])
 			gui::Graphics::forceClose = true;
 
 		// gui::Graphics::currentCamera->move({1, 0});

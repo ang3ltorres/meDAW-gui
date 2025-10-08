@@ -3,7 +3,7 @@
 #include "pch.hpp"
 
 #include "core/color.hpp"
-#include "core/input.hpp"
+#include "core/event.hpp"
 #include "core/shader.hpp"
 #include "core/camera.hpp"
 #include "core/texture.hpp"
@@ -33,9 +33,6 @@ namespace gui
 		static unsigned int width;
 		static unsigned int height;
 		static bool forceClose;
-
-		// Input
-		static Input *input;
 
 		// Default stuff
 		static GLuint currentVAO;
