@@ -12,6 +12,8 @@ int main()
 
 	gui::Font *font = new gui::Font{"../font/mononoki-Bold.ttf", 90};
 
+	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
+
 	// auto it = font->glyphs->find('p');
 	// const gui::Glyph &glyph = it->second;
 	// font->src =
@@ -32,7 +34,7 @@ int main()
 
 	// font->updateModel();
 
-	gui::Text *text = new gui::Text{font, "Hello world!! que para"};
+	gui::Text *text = new gui::Text{font, "Hello world!! que para", 0.9f};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -45,6 +47,8 @@ int main()
 	while (!gui::Graphics::shouldClose())
 	{
 		// Update logic
+		text->renderTexture->dst.y += 1.0f;
+		text->renderTexture->updateModel();
 
 		if (Input::keyboardStates[GLFW_KEY_ESCAPE])
 			gui::Graphics::forceClose = true;
@@ -56,8 +60,11 @@ int main()
 		gui::Graphics::setRenderTexture(renderTexture);
 		gui::Graphics::clearScreen({255, 0, 255});
 
-		//rect->sprite->batch();
-		//rect->sprite->texture->draw();
+		text->renderTexture->batch();
+		text->renderTexture->texture->draw();
+
+		rect->sprite->batch();
+		rect->sprite->texture->draw();
 
 		// Render to default "canvas"
 		gui::Graphics::setRenderTexture();
@@ -82,6 +89,7 @@ int main()
 	}
 
 	delete font;
+	delete rect;
 	delete renderTexture;
 
 	gui::Graphics::finalize();
