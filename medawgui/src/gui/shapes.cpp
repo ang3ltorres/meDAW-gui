@@ -30,7 +30,7 @@ height + thickness, // 5
 thickness / 2.0f    // 6
 );
 
-	// fmt::println(svgRectanleRounded);
+	std::println("{}", svgRectanleRounded);
 
 	texture = new Texture(svgRectanleRounded, 1.0f, 1);
 	sprite = new Sprite(texture);

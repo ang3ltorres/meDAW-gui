@@ -9,7 +9,7 @@ namespace gui::shape
 	public:
 		Shape() = default;
 		Shape(const Shape&) = delete;
-		~Shape() = default;
+		virtual ~Shape() = default;
 
 		gui::Texture *texture;
 		gui::Sprite  *sprite;
@@ -20,6 +20,6 @@ namespace gui::shape
 	public:
 		Rectangle(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness);
 		Rectangle(const Rectangle&) = delete;
-		~Rectangle();
+		virtual ~Rectangle() override;
 	};
 }

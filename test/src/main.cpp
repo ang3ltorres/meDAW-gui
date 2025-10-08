@@ -1,4 +1,5 @@
 #include "core/graphics.hpp"
+#include "gui/editor.hpp"
 
 int main()
 {
@@ -7,12 +8,13 @@ int main()
 
 	
 	gui::Graphics::initialize(width, height, "OpenGL");
+	gui::Editor::initialize();
 	
 	gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
 
 	gui::Font *font = new gui::Font{"../font/mononoki-Bold.ttf", 90};
 
-	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 10, 4);
+	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 0, 0);
 
 	// auto it = font->glyphs->find('p');
 	// const gui::Glyph &glyph = it->second;
@@ -92,6 +94,7 @@ int main()
 	delete rect;
 	delete renderTexture;
 
+	gui::Editor::finalize();
 	gui::Graphics::finalize();
 	return 0;
 }
