@@ -65,6 +65,7 @@ void Graphics::initialize(int width, int height, const char *title)
 
 	// Set callbacks
 	glfwSetKeyCallback(Graphics::window, &Event::keyboardCallback);
+	glfwSetMouseButtonCallback(Graphics::window, &Event::mouseCallback);
 	glfwSetFramebufferSizeCallback(Graphics::window, resized);
 
 	// Components

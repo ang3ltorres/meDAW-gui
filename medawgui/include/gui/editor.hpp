@@ -4,25 +4,39 @@
 
 namespace gui
 {
-  class TransportBar : public Pane
-  {
-    
-  };
+	struct TransportBar : public Pane
+	{
+		TransportBar();
+		TransportBar(const TransportBar&) = delete;
+		virtual ~TransportBar() override;
+	};
 
-  class ClockDisplays : public Pane
-  {
-    
-  };
+	struct ClockDisplays : public Pane
+	{
+		ClockDisplays();
+		ClockDisplays(const ClockDisplays&) = delete;
+		virtual ~ClockDisplays() override;
+	};
 
-  class ModeSelector : public Pane
-  {
-    
-  };
+	struct ModeSelector : public Pane
+	{
+		ModeSelector();
+		ModeSelector(const ModeSelector&) = delete;
+		virtual ~ModeSelector() override;
+	};
 
-  class Editor
-  {
-  public:
-    static void initialize();
-    static void finalize();
-  };
+	struct TopBar : public Pane
+	{
+		TopBar();
+		TopBar(const TopBar&) = delete;
+		virtual ~TopBar() override;
+	};
+
+	struct Editor
+	{
+		static void initialize();
+		static void finalize();
+
+		static void update();
+	};
 }

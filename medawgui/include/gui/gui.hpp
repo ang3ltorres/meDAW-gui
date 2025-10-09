@@ -4,9 +4,8 @@
 
 namespace gui
 {
-	class Widget
+	struct Widget
 	{
-	public:
 		Widget(const glm::ivec2& pos, const glm::uvec2& size, const std::string& name);
 		Widget(const Widget&) = delete;
 		virtual ~Widget() = default;
@@ -19,13 +18,14 @@ namespace gui
 		virtual void draw() = 0;
 	};
 
-	class Pane : public Widget
+	struct Pane : public Widget
 	{
-	public:
+		Pane();
 		Pane(const Pane&) = delete;
-		virtual ~Pane() override;
+		virtual ~Pane() = default;
 		
 		std::vector<Widget*> widgets;
+		gui::shape::Shape* mainShape;
 
 		// Rearrenge internal widgets and draw them
 		virtual void update() = 0;

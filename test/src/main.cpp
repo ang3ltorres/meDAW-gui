@@ -1,23 +1,25 @@
 #include "core/graphics.hpp"
 #include "gui/editor.hpp"
 
+using namespace gui;
+
 int main()
 {
 	unsigned int width = 1280;
 	unsigned int height = 720;
 
 	
-	gui::Graphics::initialize(width, height, "OpenGL");
-	gui::Editor::initialize();
+	Graphics::initialize(width, height, "OpenGL");
+	Editor::initialize();
 	
-	gui::RenderTexture *renderTexture = new gui::RenderTexture{800, 600};
+	RenderTexture *renderTexture = new RenderTexture{800, 600};
 
-	gui::Font *font = new gui::Font{"../font/mononoki-Bold.ttf", 90};
+	Font *font = new Font{"../font/mononoki-Bold.ttf", 90};
 
-	gui::shape::Rectangle *rect = new gui::shape::Rectangle(50, 150, 0, 0);
+	shape::Rectangle *rect = new shape::Rectangle(50, 150, 0, 0);
 
 	// auto it = font->glyphs->find('p');
-	// const gui::Glyph &glyph = it->second;
+	// const Glyph &glyph = it->second;
 	// font->src =
 	// {
 	// 	glyph.atlasPos.x,
@@ -36,7 +38,7 @@ int main()
 
 	// font->updateModel();
 
-	gui::Text *text = new gui::Text{font, "Hello world!! que para", 0.9f};
+	Text *text = new Text{font, "Hello world!! que para", 0.9f};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -46,21 +48,27 @@ int main()
 	// svgSprite->dst.w *= 4;
 	// svgSprite->updateModel();
 
-	while (!gui::Graphics::shouldClose())
+	// Render to default "canvas"
+	//Graphics::setRenderTexture();
+	Graphics::clearScreen({255, 143, 119});
+	glfwSwapBuffers(Graphics::window);
+	Graphics::clearScreen({255, 143, 119});
+
+	while (!Graphics::shouldClose())
 	{
 		// Update logic
 		text->renderTexture->dst.y += 1.0f;
 		text->renderTexture->updateModel();
 
 		if (Event::keyboardStates[GLFW_KEY_ESCAPE])
-			gui::Graphics::forceClose = true;
+			Graphics::forceClose = true;
 
-		// gui::Graphics::currentCamera->move({1, 0});
+		// Graphics::currentCamera->move({1, 0});
 		// rect->sprite->texture->updateUBO();
 
 		// Render to target
-		gui::Graphics::setRenderTexture(renderTexture);
-		gui::Graphics::clearScreen({255, 0, 255});
+		Graphics::setRenderTexture(renderTexture);
+		Graphics::clearScreen({255, 0, 255});
 
 		text->renderTexture->batch();
 		text->renderTexture->texture->draw();
@@ -69,8 +77,8 @@ int main()
 		rect->sprite->texture->draw();
 
 		// Render to default "canvas"
-		gui::Graphics::setRenderTexture();
-		gui::Graphics::clearScreen({255, 143, 119});
+		Graphics::setRenderTexture();
+		//Graphics::clearScreen({255, 143, 119});
 		
 		renderTexture->batch();
 		renderTexture->texture->draw();
@@ -87,14 +95,14 @@ int main()
 		// rect->sprite->batch();
 		// rect->sprite->texture->draw();
 
-		gui::Graphics::endFrame();
+		Graphics::endFrame();
 	}
 
 	delete font;
 	delete rect;
 	delete renderTexture;
 
-	gui::Editor::finalize();
-	gui::Graphics::finalize();
+	Editor::finalize();
+	Graphics::finalize();
 	return 0;
 }

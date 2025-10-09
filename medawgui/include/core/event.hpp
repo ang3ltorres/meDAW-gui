@@ -2,15 +2,21 @@
 
 #include "pch.hpp"
 
-class Event
+namespace gui
 {
-public:
-	Event() = delete;
-	Event(const Event&) = delete;
-	~Event() = default;
+	struct Event
+	{
+		Event() = delete;
+		Event(const Event&) = delete;
+		~Event() = default;
+	
+		static std::bitset<512> keyboardStates;
+		static std::bitset<8> mouseStates;
+		static std::function<void()> callback;
+	
+		static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+		static void mouseCallback(GLFWwindow* window, int button, int action, int mods);
+	};
+}
 
-	static std::bitset<512> keyboardStates;
-
-	static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-};
 
