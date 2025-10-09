@@ -49,53 +49,20 @@ int main()
 	// svgSprite->updateModel();
 
 	// Render to default "canvas"
-	//Graphics::setRenderTexture();
-	Graphics::clearScreen({255, 143, 119});
-	glfwSwapBuffers(Graphics::window);
-	Graphics::clearScreen({255, 143, 119});
+	// We draw into both buffers to avoid epilepsy
+	Graphics::setRenderTexture();
+	//Graphics::clearScreen({255, 143, 119});
+	//glfwSwapBuffers(Graphics::window);
+	//Graphics::clearScreen({255, 143, 119});
 
 	while (!Graphics::shouldClose())
 	{
-		// Update logic
-		text->renderTexture->dst.y += 1.0f;
-		text->renderTexture->updateModel();
 
 		if (Event::keyboardStates[GLFW_KEY_ESCAPE])
 			Graphics::forceClose = true;
 
-		// Graphics::currentCamera->move({1, 0});
-		// rect->sprite->texture->updateUBO();
-
-		// Render to target
-		Graphics::setRenderTexture(renderTexture);
-		Graphics::clearScreen({255, 0, 255});
-
-		text->renderTexture->batch();
-		text->renderTexture->texture->draw();
-
-		rect->sprite->batch();
-		rect->sprite->texture->draw();
-
-		// Render to default "canvas"
-		Graphics::setRenderTexture();
-		//Graphics::clearScreen({255, 143, 119});
-		
-		renderTexture->batch();
-		renderTexture->texture->draw();
-
-		// font->batch();
-		// font->texture->draw();
-
-		text->renderTexture->batch();
-		text->renderTexture->texture->draw();
-
-		// svgSprite->batch();
-		// svgSprite->texture->draw();
-
-		// rect->sprite->batch();
-		// rect->sprite->texture->draw();
-
-		Graphics::endFrame();
+		glfwPollEvents();
+		// Graphics::endFrame();
 	}
 
 	delete font;

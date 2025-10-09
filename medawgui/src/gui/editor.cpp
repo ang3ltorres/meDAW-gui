@@ -35,16 +35,30 @@ ModeSelector::~ModeSelector()
 
 TopBar::TopBar()
 {
-	mainShape = new shape::Rectangle{300, 300, 20, 4};
+	shape = new shape::Rectangle{300, 300, 20, 4};
 }
 
 TopBar::~TopBar()
 {
-	delete mainShape;
+	delete shape;
 }
+
+void TopBar::draw()
+{
+	shape->sprite->batch();
+	shape->sprite->texture->draw();
+}
+
+void TopBar::update()
+{
+}
+
+std::vector<Pane*> Editor::panes;
 
 void Editor::initialize()
 {
+	panes.push_back(new TopBar{});
+
 	// Set generic update callback
 	Event::callback = [](){
 
@@ -60,4 +74,10 @@ void Editor::finalize()
 void Editor::update()
 {
 	std::println("XD");
+	Graphics::clearScreen({255, 143, 119});
+
+	for (const auto& i : panes)
+		i->draw();
+
+	glfwSwapBuffers(Graphics::window);
 }
