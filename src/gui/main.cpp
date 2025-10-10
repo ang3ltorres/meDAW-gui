@@ -10,7 +10,6 @@ int main()
 
 	
 	Graphics::initialize(width, height, "OpenGL");
-	Editor::initialize();
 	
 	RenderTexture *renderTexture = new RenderTexture{800, 600};
 
@@ -49,8 +48,8 @@ int main()
 	// Render to default "canvas"
 	// Force firts draw to avoid bugs on Wayland and epilepsy
 	Graphics::setRenderTexture();
-	Graphics::clearScreen({255, 143, 119, 255});
 	Graphics::drawBuffer();
+	Editor::initialize();
 
 	while (!Graphics::shouldClose())
 	{

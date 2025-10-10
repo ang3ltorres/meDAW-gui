@@ -15,16 +15,6 @@ Camera *Graphics::defaultCamera;
 float Graphics::fps;
 float Graphics::delta;
 
-static void resized([[maybe_unused]] GLFWwindow *window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-	Graphics::currentCamera->width  = width;
-	Graphics::currentCamera->height = height;
-
-	Graphics::width  = width;
-	Graphics::height = height;
-}
-
 void Graphics::initialize(int width, int height, const char *title)
 {
 	Graphics::width  = width;
@@ -66,7 +56,7 @@ void Graphics::initialize(int width, int height, const char *title)
 	// Set callbacks
 	glfwSetKeyCallback(Graphics::window, &Event::keyboardCallback);
 	glfwSetMouseButtonCallback(Graphics::window, &Event::mouseCallback);
-	glfwSetFramebufferSizeCallback(Graphics::window, resized);
+	glfwSetFramebufferSizeCallback(Graphics::window, &Event::resizedCallback);
 
 	// Components
 	Texture::initialize();

@@ -45,6 +45,8 @@ TopBar::~TopBar()
 
 void TopBar::draw()
 {
+	
+	shape->sprite->updateModel();
 	shape->sprite->batch();
 	shape->sprite->texture->draw();
 }
@@ -59,8 +61,11 @@ void Editor::initialize()
 {
 	panes.push_back(new TopBar{});
 
+	// First draw
+	Editor::update();
+
 	// Set generic update callback
-	Event::callback = &Editor::update;
+	Event::updateCallback = &Editor::update;
 }
 
 void Editor::finalize()
@@ -75,5 +80,5 @@ void Editor::update()
 	for (const auto& i : panes)
 		i->draw();
 
-	glfwSwapBuffers(Graphics::window);
+	Graphics::drawBuffer();
 }
