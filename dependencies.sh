@@ -62,6 +62,8 @@ cmake \
 	-D GLFW_BUILD_DOCS=OFF \
 	-D GLFW_BUILD_EXAMPLES=OFF \
 	-D GLFW_BUILD_TESTS=OFF \
+	-D GLFW_BUILD_WAYLAND=ON \
+	-D GLFW_BUILD_X11=ON \
 	../../extract/glfw-3.4
 
 make -j $cores

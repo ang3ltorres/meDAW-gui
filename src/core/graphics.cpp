@@ -132,8 +132,13 @@ void Graphics::setTexture(GLuint texture)
 	}
 }
 
-void Graphics::endFrame()
+void Graphics::drawBuffer()
 {
 	glfwSwapBuffers(Graphics::window);
+}
+
+void Graphics::pollEvents()
+{
 	glfwPollEvents();
 }
+

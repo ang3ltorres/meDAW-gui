@@ -38,7 +38,7 @@ int main()
 
 	// font->updateModel();
 
-	Text *text = new Text{font, "Hello world!! que para", 0.9f};
+	Text *text = new Text{font, "Hello world!!", 0.9f};
 
 	// renderTexture->dst.z *= 1;
 	// renderTexture->dst.w *= 1;
@@ -49,11 +49,10 @@ int main()
 	// svgSprite->updateModel();
 
 	// Render to default "canvas"
-	// We draw into both buffers to avoid epilepsy
+	// Force firts draw to avoid bugs on Wayland and epilepsy
 	Graphics::setRenderTexture();
-	//Graphics::clearScreen({255, 143, 119});
-	//glfwSwapBuffers(Graphics::window);
-	//Graphics::clearScreen({255, 143, 119});
+	Graphics::clearScreen({255, 143, 119});
+	Graphics::drawBuffer();
 
 	while (!Graphics::shouldClose())
 	{
@@ -61,8 +60,7 @@ int main()
 		if (Event::keyboardStates[GLFW_KEY_ESCAPE])
 			Graphics::forceClose = true;
 
-		glfwPollEvents();
-		// Graphics::endFrame();
+		Graphics::pollEvents();
 	}
 
 	delete font;

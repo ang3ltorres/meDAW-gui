@@ -50,6 +50,7 @@ namespace gui
 		static void setRenderTexture(RenderTexture *renderTexture = nullptr);
 		static void setVAO(GLuint VAO);
 		static void setTexture(GLuint texture);
-		static void endFrame();
+		static void drawBuffer();
+		static void pollEvents();
 	};
 }
