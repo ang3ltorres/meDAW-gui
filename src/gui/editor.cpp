@@ -35,7 +35,7 @@ ModeSelector::~ModeSelector()
 
 TopBar::TopBar()
 {
-	shape = new shape::Rectangle{300, 300, 20, 4};
+	shape = new shape::Rectangle{300, 300, 20, 8, palette::hex::dark, palette::hex::pink};
 }
 
 TopBar::~TopBar()
@@ -60,10 +60,7 @@ void Editor::initialize()
 	panes.push_back(new TopBar{});
 
 	// Set generic update callback
-	Event::callback = [](){
-
-		Editor::update();
-	};
+	Event::callback = &Editor::update;
 }
 
 void Editor::finalize()

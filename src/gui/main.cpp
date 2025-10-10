@@ -16,8 +16,6 @@ int main()
 
 	Font *font = new Font{"../font/mononoki-Bold.ttf", 90};
 
-	shape::Rectangle *rect = new shape::Rectangle(50, 150, 0, 0);
-
 	// auto it = font->glyphs->find('p');
 	// const Glyph &glyph = it->second;
 	// font->src =
@@ -64,7 +62,6 @@ int main()
 	}
 
 	delete font;
-	delete rect;
 	delete renderTexture;
 
 	Editor::finalize();

@@ -18,7 +18,7 @@ namespace gui::shape
 	class Rectangle : public Shape
 	{
 	public:
-		Rectangle(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness);
+		Rectangle(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke);
 		Rectangle(const Rectangle&) = delete;
 		virtual ~Rectangle() override;
 	};
