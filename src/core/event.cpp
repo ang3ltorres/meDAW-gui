@@ -3,7 +3,7 @@
 using namespace gui;
 
 std::bitset<512> Event::keyboardStates;
-std::bitset<8> Event::mouseStates;
+std::bitset<8>   Event::mouseStates;
 std::function<void()> Event::callback = nullptr;
 
 void Event::keyboardCallback([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)

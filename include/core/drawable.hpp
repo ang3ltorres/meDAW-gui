@@ -2,7 +2,6 @@
 
 #include "pch.hpp"
 
-#include "core/color.hpp"
 #include "core/texture.hpp"
 
 namespace gui
@@ -18,7 +17,7 @@ namespace gui
 		
 		glm::ivec4 src;
 		glm::ivec4 dst;
-		Color color;
+		glm::uvec4 color;
 		float rotation;
 
 		void updateModel();

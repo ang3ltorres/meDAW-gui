@@ -19,14 +19,14 @@ namespace gui::palette
 
 	namespace rgb
 	{
-		constexpr gui::Color dark   = {121, 121, 121};  // #797979
-		constexpr gui::Color darker = {40, 41, 35};     // #282923
-		constexpr gui::Color light  = {248, 248, 242};  // #F8F8F2
-		constexpr gui::Color blue   = {102, 217, 239};  // #66D9EF
-		constexpr gui::Color green  = {166, 226, 46};   // #A6E22E
-		constexpr gui::Color purple = {172, 128, 255};  // #AC80FF
-		constexpr gui::Color yellow = {231, 219, 116};  // #E7DB74
-		constexpr gui::Color orange = {253, 151, 31};   // #FD971F
-		constexpr gui::Color pink   = {244, 36, 97};    // #F42461
+		constexpr glm::uvec4 dark   = {121, 121, 121, 255}; // #797979
+		constexpr glm::uvec4 darker = {40,  41,  35, 255};  // #282923
+		constexpr glm::uvec4 light  = {248, 248, 242, 255}; // #F8F8F2
+		constexpr glm::uvec4 blue   = {102, 217, 239, 255}; // #66D9EF
+		constexpr glm::uvec4 green  = {166, 226, 46, 255};  // #A6E22E
+		constexpr glm::uvec4 purple = {172, 128, 255, 255}; // #AC80FF
+		constexpr glm::uvec4 yellow = {231, 219, 116, 255}; // #E7DB74
+		constexpr glm::uvec4 orange = {253, 151, 31, 255};  // #FD971F
+		constexpr glm::uvec4 pink   = {244, 36,  97, 255};  // #F42461
 	}
 }

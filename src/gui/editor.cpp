@@ -73,8 +73,7 @@ void Editor::finalize()
 
 void Editor::update()
 {
-	std::println("XD");
-	Graphics::clearScreen({255, 143, 119});
+	Graphics::clearScreen({255, 143, 119, 255});
 
 	for (const auto& i : panes)
 		i->draw();

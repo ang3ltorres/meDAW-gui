@@ -51,7 +51,7 @@ int main()
 	// Render to default "canvas"
 	// Force firts draw to avoid bugs on Wayland and epilepsy
 	Graphics::setRenderTexture();
-	Graphics::clearScreen({255, 143, 119});
+	Graphics::clearScreen({255, 143, 119, 255});
 	Graphics::drawBuffer();
 
 	while (!Graphics::shouldClose())

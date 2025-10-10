@@ -1,13 +1,8 @@
 #pragma once
 
 // STD
-#include <cstring>
-#include <cstdio>
-#include <cstdlib>
-#include <string>
 #include <bitset>
 #include <functional>
-#include <vector>
 #include <format>
 #include <print>
 

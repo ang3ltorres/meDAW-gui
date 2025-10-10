@@ -2,7 +2,6 @@
 
 #include "pch.hpp"
 
-#include "core/color.hpp"
 #include "core/event.hpp"
 #include "core/shader.hpp"
 #include "core/camera.hpp"
@@ -46,7 +45,7 @@ namespace gui
 
 		// Library Methods
 		static bool shouldClose();
-		static void clearScreen(const Color &color);
+		static void clearScreen(const glm::uvec4 &color);
 		static void setRenderTexture(RenderTexture *renderTexture = nullptr);
 		static void setVAO(GLuint VAO);
 		static void setTexture(GLuint texture);

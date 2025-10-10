@@ -52,7 +52,7 @@ void Graphics::initialize(int width, int height, const char *title)
     glfwSwapInterval(1);
 	glActiveTexture(GL_TEXTURE0);
 
-	Graphics::clearScreen({255, 255, 255});
+	Graphics::clearScreen({255, 255, 255, 255});
 
 	Shader::current  = nullptr;
 	Graphics::currentVAO     = 0;
@@ -86,7 +86,7 @@ bool Graphics::shouldClose()
 	return glfwWindowShouldClose(Graphics::window);
 }
 
-void Graphics::clearScreen(const Color &color)
+void Graphics::clearScreen(const glm::uvec4 &color)
 {
 	glClearColor(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
