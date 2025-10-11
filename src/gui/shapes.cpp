@@ -14,12 +14,9 @@ Rectangle::~Rectangle()
 
 void Rectangle::rebuild(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke)
 {
-  std::println("REBUILD!!");
-
   if (sprite)  delete sprite;
-  if (texture) delete texture;
 
-  const std::string svgRectanleRounded = std::format(
+  const std::string svg = std::format(
 R"(<?xml version='1.0' encoding='UTF-8'?>
 <svg
   width='{4:d}'
@@ -47,6 +44,15 @@ fill,               // 7
 stroke              // 8
 );
 
-  texture = new Texture{svgRectanleRounded, 1.0f, 1};
+  if (texture)
+  {
+    unsigned char *pixelData;
+    unsigned int newWidth, newHeight;
+    Texture::getPixelDataSVGPercentRAW(svg, pixelData, 1.0f, &newWidth, &newHeight);
+    texture->updateTexture(pixelData, newWidth, newHeight);
+  }
+  else
+    texture = new Texture{svg, 1.0f, 1};
+
   sprite  = new Sprite{texture};
 }

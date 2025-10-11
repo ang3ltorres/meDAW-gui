@@ -60,6 +60,8 @@ namespace gui
 		Texture(const Texture&) = delete;
 		~Texture();
 
+		void updateTexture(unsigned char *newPixelData, unsigned int newWidth, unsigned int newHeight);
+
 		GLuint UBO_NonShared;
 		int Type;
 
