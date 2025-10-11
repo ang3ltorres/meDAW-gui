@@ -35,24 +35,24 @@ ModeSelector::~ModeSelector()
 
 TopBar::TopBar()
 {
-	shape = new shape::Rectangle{300, 300, 20, 8, palette::hex::dark, palette::hex::pink};
+	rect = new shape::Rectangle{};
+	rect->rebuild(200, 200, 8, 4, palette::hex::dark, palette::hex::pink);
 }
 
 TopBar::~TopBar()
 {
-	delete shape;
+	delete rect;
 }
 
 void TopBar::draw()
 {
-	
-	shape->sprite->updateModel();
-	shape->sprite->batch();
-	shape->sprite->texture->draw();
+	rect->sprite->batch();
+	rect->sprite->texture->draw();
 }
 
 void TopBar::update()
 {
+	rect->rebuild(200, 200, 8, 4, palette::hex::dark, palette::hex::pink);
 }
 
 std::vector<Pane*> Editor::panes;
@@ -75,10 +75,13 @@ void Editor::finalize()
 
 void Editor::update()
 {
-	Graphics::clearScreen({255, 143, 119, 255});
+	Graphics::clearScreen({255, 255, 255, 255});
 
 	for (const auto& i : panes)
+	{
+		i->update();
 		i->draw();
+	}
 
 	Graphics::drawBuffer();
 }

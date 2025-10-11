@@ -51,7 +51,7 @@ void Event::mouseCallback(GLFWwindow* window, int button, int action, [[maybe_un
 	{
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
-		std::println("X:{}, Y:{}", xpos, ypos);
+		std::println("{:.0f}, {:.0f}", xpos, ypos);
 	}
 }
 

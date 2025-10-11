@@ -303,6 +303,14 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, Glyp
 void Texture::createTexture()
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &id);
+
+	auto err = glGetError();
+	if (err != GL_NO_ERROR)
+		std::println("GL error: {}", err);
+	else
+		std::println("No error", err);
+
+	std::println("Texture constructor, id={}", id);
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
@@ -360,6 +368,11 @@ Texture::Texture(const std::string &svgData, float percent, unsigned int maxInst
 : maxInstances(maxInstances), currentInstance(0)
 {
 	Texture::getPixelDataSVGPercentRAW(svgData, pixelData, percent, &width, &height);
+
+		std::println("pixelData ptr={}, first bytes={:02X} {:02X} {:02X} {:02X}",
+	(void*)pixelData,
+	pixelData[0], pixelData[1], pixelData[2], pixelData[3]);
+
 	createTexture();
 	createBuffers(0);
 }
@@ -382,6 +395,8 @@ Texture::Texture(unsigned int width, unsigned int height, unsigned int maxInstan
 
 Texture::~Texture()
 {
+	std::println("Texture destructor, id={}", id);
+
 	glDeleteBuffers(1, &UBO_NonShared);
 	glDeleteBuffers(1, &SSBO);
 	glDeleteTextures(1, &id);

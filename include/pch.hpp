@@ -1,6 +1,7 @@
 #pragma once
 
 // STD
+#include <new>
 #include <bitset>
 #include <functional>
 #include <format>

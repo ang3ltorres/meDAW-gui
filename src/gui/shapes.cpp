@@ -2,9 +2,24 @@
 
 using namespace gui::shape;
 
-Rectangle::Rectangle(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke)
+Shape::Shape()
+: texture(nullptr), sprite(nullptr)
+{}
+
+Rectangle::~Rectangle()
 {
-const std::string svgRectanleRounded = std::format(
+  if (sprite)  delete sprite;
+  if (texture) delete texture;
+}
+
+void Rectangle::rebuild(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke)
+{
+  std::println("REBUILD!!");
+
+  if (sprite)  delete sprite;
+  if (texture) delete texture;
+
+  const std::string svgRectanleRounded = std::format(
 R"(<?xml version='1.0' encoding='UTF-8'?>
 <svg
   width='{4:d}'
@@ -32,14 +47,6 @@ fill,               // 7
 stroke              // 8
 );
 
-	std::println("{}", svgRectanleRounded);
-
-	texture = new Texture(svgRectanleRounded, 1.0f, 1);
-	sprite = new Sprite(texture);
-}
-
-Rectangle::~Rectangle()
-{
-	delete sprite;
-	delete texture;
+  texture = new Texture{svgRectanleRounded, 1.0f, 1};
+  sprite  = new Sprite{texture};
 }

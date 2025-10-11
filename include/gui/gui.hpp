@@ -25,7 +25,7 @@ namespace gui
 		virtual ~Pane() = default;
 		
 		std::vector<Widget*> widgets;
-		gui::shape::Shape* shape;
+		gui::shape::Rectangle* rect;
 
 		// Rearrenge internal widgets and draw them
 		virtual void update() = 0;
