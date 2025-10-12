@@ -1,8 +1,6 @@
 #pragma once
 
 // STD
-#include <cstring>
-#include <new>
 #include <bitset>
 #include <functional>
 #include <format>

@@ -8,14 +8,13 @@ Shape::Shape()
 
 Rectangle::~Rectangle()
 {
-  if (sprite)  delete sprite;
-  if (texture) delete texture;
+  if (sprite) sprite->~Sprite();
+  if (texture) texture->~Texture();
+  std::println("Delete shape");
 }
 
 void Rectangle::rebuild(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke)
 {
-  if (sprite)  delete sprite;
-
   const std::string svg = std::format(
 R"(<?xml version='1.0' encoding='UTF-8'?>
 <svg
@@ -52,7 +51,8 @@ stroke              // 8
     texture->updateTexture(pixelData, newWidth, newHeight);
   }
   else
-    texture = new Texture{svg, 1.0f, 1};
+    texture = new (bufferTexture) Texture{svg, 1.0f, 1};
 
-  sprite  = new Sprite{texture};
+  if (sprite) sprite->~Sprite();
+  sprite = new (bufferSprite) Sprite{texture};
 }

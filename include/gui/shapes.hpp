@@ -10,9 +10,12 @@ namespace gui::shape
 		Shape();
 		Shape(const Shape&) = delete;
 		virtual ~Shape() = default;
+
+		alignas(Texture) unsigned char bufferTexture[sizeof(Texture)];
+		Texture *texture;
 		
-		gui::Texture *texture;
-		gui::Sprite *sprite;
+		alignas(Sprite) unsigned char bufferSprite[sizeof(Sprite)];
+		Sprite *sprite;
 	};
 
 	class Rectangle : public Shape

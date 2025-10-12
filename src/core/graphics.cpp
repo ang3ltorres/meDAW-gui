@@ -39,10 +39,10 @@ void Graphics::initialize(int width, int height, const char *title)
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_STENCIL_TEST);
 	glDepthMask(GL_FALSE);
-    glfwSwapInterval(1);
+  glfwSwapInterval(1);
 	glActiveTexture(GL_TEXTURE0);
 
-	Graphics::clearScreen({255, 0, 0, 255});
+	Graphics::clearScreen({255, 255, 255, 255});
 
 	Shader::current  = nullptr;
 	Graphics::currentVAO     = 0;

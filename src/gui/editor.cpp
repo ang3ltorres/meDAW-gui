@@ -70,7 +70,8 @@ void Editor::initialize()
 
 void Editor::finalize()
 {
-	
+	for (auto i : panes)
+		delete i;
 }
 
 void Editor::update()
