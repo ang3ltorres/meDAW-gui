@@ -300,7 +300,7 @@ void Texture::getPixelDataFont(const char *fontPath, unsigned int fontSize, Glyp
 	FT_Done_FreeType(ft);
 }
 
-void Texture::createTexture()
+void Texture::createTexture(unsigned char *pixelData)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &id);
 	glTextureStorage2D(id, 1, GL_RGBA8, width, height);
@@ -311,6 +311,8 @@ void Texture::createTexture()
 	glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	delete[] pixelData;
 }
 
 void Texture::createBuffers(int textureType)
@@ -327,56 +329,62 @@ void Texture::createBuffers(int textureType)
 Texture::Texture(const char *fileName, unsigned int maxInstances)
 : maxInstances(maxInstances), currentInstance(0)
 {
+	unsigned char *pixelData;
 	Texture::getPixelDataPNG(fileName, pixelData, &width, &height);
-	createTexture();
+	createTexture(pixelData);
 	createBuffers(0);
 }
 
 Texture::Texture(const char *fileName, unsigned int width, unsigned int height, unsigned int maxInstances)
 : width(width), height(height), maxInstances(maxInstances), currentInstance(0)
 {
+	unsigned char *pixelData;
 	Texture::getPixelDataSVGFixed(fileName, pixelData, width, height);
-	createTexture();
+	createTexture(pixelData);
 	createBuffers(0);
 }
 
 Texture::Texture(const std::string &svgData, unsigned int width, unsigned int height, unsigned int maxInstances)
 : width(width), height(height), maxInstances(maxInstances), currentInstance(0)
 {
+	unsigned char *pixelData;
 	Texture::getPixelDataSVGFixedRAW(svgData, pixelData, width, height);
-	createTexture();
+	createTexture(pixelData);
 	createBuffers(0);
 }
 
 Texture::Texture(const char *fileName, float percent, unsigned int maxInstances)
 : maxInstances(maxInstances), currentInstance(0)
 {
+	unsigned char *pixelData;
 	Texture::getPixelDataSVGPercent(fileName, pixelData, percent, &width, &height);
-	createTexture();
+	createTexture(pixelData);
 	createBuffers(0);
 }
 
 Texture::Texture(const std::string &svgData, float percent, unsigned int maxInstances)
 : maxInstances(maxInstances), currentInstance(0)
 {
+	unsigned char *pixelData;
 	Texture::getPixelDataSVGPercentRAW(svgData, pixelData, percent, &width, &height);
-	createTexture();
+	createTexture(pixelData);
 	createBuffers(0);
 }
 
 Texture::Texture(const char *fontPath, unsigned int fontSize, Glyph *glyphs, unsigned int maxInstances)
 : maxInstances(maxInstances), currentInstance(0)
 {
+	unsigned char *pixelData;
 	Texture::getPixelDataFont(fontPath, fontSize, glyphs, pixelData, &width, &height);
-	createTexture();
+	createTexture(pixelData);
 	createBuffers(2);
 }
 
 Texture::Texture(unsigned int width, unsigned int height, unsigned int maxInstances)
 : width(width), height(height), maxInstances(maxInstances), currentInstance(0)
 {
-	pixelData = nullptr;
-	createTexture();
+	unsigned char *pixelData = nullptr;
+	createTexture(pixelData);
 	createBuffers(1);	
 }
 
@@ -386,22 +394,17 @@ Texture::~Texture()
 	glDeleteBuffers(1, &SSBO);
 	glDeleteTextures(1, &id);
 	delete[] SSBO_Data;
-	delete[] pixelData;
 }
 
-void Texture::updateTexture(unsigned char *newPixelData, unsigned int newWidth, unsigned int newHeight)
+void Texture::updateTexture(unsigned char *pixelData, unsigned int newWidth, unsigned int newHeight)
 {
-	delete[] pixelData;
-
 	unsigned int oldWidth = width;
 	unsigned int oldHeight = height;
 
 	width  = newWidth;
 	height = newHeight;
 
-	pixelData = newPixelData;
-
-	if (oldWidth != newWidth || oldHeight != newHeight)
+	if ((oldWidth != newWidth) or (oldHeight != newHeight))
 	{
 		GLuint newID;
 		glCreateTextures(GL_TEXTURE_2D, 1, &newID);
@@ -422,6 +425,8 @@ void Texture::updateTexture(unsigned char *newPixelData, unsigned int newWidth, 
 	}
 	else
 		glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+
+	delete[] pixelData;
 }
 
 void Texture::draw()

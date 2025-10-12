@@ -20,8 +20,6 @@ void Event::resizedCallback([[maybe_unused]] GLFWwindow *window, int width, int 
 
 	if (updateCallback != nullptr)
 		updateCallback();
-
-	// std::println("{} {}", width, height);
 }
 
 void Event::keyboardCallback([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)
@@ -51,7 +49,6 @@ void Event::mouseCallback(GLFWwindow* window, int button, int action, [[maybe_un
 	{
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
-		// std::println("{:.0f}, {:.0f}", xpos, ypos);
 	}
 }
 

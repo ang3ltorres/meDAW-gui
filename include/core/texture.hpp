@@ -26,7 +26,6 @@ namespace gui
 		GLuint id;
 		GLuint width;
 		GLuint height;
-		unsigned char *pixelData;
 
 		static void initialize();
 		static void finalize();
@@ -47,7 +46,7 @@ namespace gui
 		static GPU_UBO UBO_Data;
 		
 		// Constructor common
-		void createTexture();
+		void createTexture(unsigned char *pixelData);
 		void createBuffers(int textureType);
 
 		Texture(const char *fileName, unsigned int maxInstances);
@@ -60,7 +59,7 @@ namespace gui
 		Texture(const Texture&) = delete;
 		~Texture();
 
-		void updateTexture(unsigned char *newPixelData, unsigned int newWidth, unsigned int newHeight);
+		void updateTexture(unsigned char *pixelData, unsigned int newWidth, unsigned int newHeight);
 
 		GLuint UBO_NonShared;
 		int Type;
