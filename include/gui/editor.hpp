@@ -10,8 +10,8 @@ namespace gui
 		TransportBar(const TransportBar&) = delete;
 		virtual ~TransportBar() override;
 
-		//virtual void draw() override;
-		//virtual void update() override;
+		virtual void update() override;
+		virtual void draw() override;
 	};
 
 	struct ClockDisplays : public Pane
@@ -20,8 +20,8 @@ namespace gui
 		ClockDisplays(const ClockDisplays&) = delete;
 		virtual ~ClockDisplays() override;
 
-		//virtual void draw() override;
-		//virtual void update() override;
+		virtual void update() override;
+		virtual void draw() override;
 	};
 
 	struct ModeSelector : public Pane
@@ -30,8 +30,8 @@ namespace gui
 		ModeSelector(const ModeSelector&) = delete;
 		virtual ~ModeSelector() override;
 
-		//virtual void draw() override;
 		//virtual void update() override;
+		//virtual void draw() override;
 	};
 
 	struct TopBar : public Pane
@@ -40,8 +40,11 @@ namespace gui
 		TopBar(const TopBar&) = delete;
 		virtual ~TopBar() override;
 
-		virtual void draw() override;
 		virtual void update() override;
+		virtual void draw() override;
+
+		TransportBar transportBar;
+		ClockDisplays clockDisplays;
 	};
 
 	struct Editor

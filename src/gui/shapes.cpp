@@ -10,7 +10,6 @@ Rectangle::~Rectangle()
 {
   if (sprite) sprite->~Sprite();
   if (texture) texture->~Texture();
-  std::println("Delete shape");
 }
 
 void Rectangle::rebuild(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke)

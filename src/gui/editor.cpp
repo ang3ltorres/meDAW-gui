@@ -5,12 +5,22 @@ using namespace glm;
 
 TransportBar::TransportBar()
 {
-	
 }
 
 TransportBar::~TransportBar()
 {
 
+}
+
+void TransportBar::update()
+{
+	rect.rebuild(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::green);
+}
+
+void TransportBar::draw()
+{
+	rect.sprite->batch();
+	rect.sprite->texture->draw();
 }
 
 ClockDisplays::ClockDisplays()
@@ -21,6 +31,19 @@ ClockDisplays::ClockDisplays()
 ClockDisplays::~ClockDisplays()
 {
 
+}
+
+void ClockDisplays::update()
+{
+	rect.rebuild(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::yellow);
+	rect.sprite->dst.x += Graphics::width * 0.2f;
+	rect.sprite->updateModel();
+}
+
+void ClockDisplays::draw()
+{
+	rect.sprite->batch();
+	rect.sprite->texture->draw();
 }
 
 ModeSelector::ModeSelector()
@@ -35,24 +58,26 @@ ModeSelector::~ModeSelector()
 
 TopBar::TopBar()
 {
-	rect = new shape::Rectangle{};
-	rect->rebuild(Graphics::width / 2, 200, 8, 4, palette::hex::dark, palette::hex::pink);
 }
 
 TopBar::~TopBar()
 {
-	delete rect;
-}
-
-void TopBar::draw()
-{
-	rect->sprite->batch();
-	rect->sprite->texture->draw();
 }
 
 void TopBar::update()
 {
-	rect->rebuild(Graphics::width / 2, Graphics::height * 0.5, Graphics::width / 7, Graphics::width / 20, palette::hex::pink, palette::hex::green);
+	rect.rebuild(Graphics::width, Graphics::height * 0.1f, 0, 0, palette::hex::dark);
+	transportBar.update();
+	clockDisplays.update();
+}
+
+void TopBar::draw()
+{
+	rect.sprite->batch();
+	rect.sprite->texture->draw();
+
+	transportBar.draw();
+	clockDisplays.draw();
 }
 
 std::vector<Pane*> Editor::panes;
@@ -76,8 +101,7 @@ void Editor::finalize()
 
 void Editor::update()
 {
-	std::println("REPAINT !!");
-	Graphics::clearScreen({255, 255, 255, 255});
+	Graphics::clearScreen(palette::rgb::darker);
 
 	for (const auto& i : panes)
 	{
