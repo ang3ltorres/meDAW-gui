@@ -17,14 +17,9 @@ layout(std430, binding = 1) buffer GPU_SSBO_buffer
 };
 
 //* Camera UBO_Shared shared *//
-struct GPU_UBO
-{
-	mat4 ViewProjection;
-};
-
 layout(std140, binding = 0) uniform GPU_UBO_buffer_shared
 {
-	GPU_UBO global_data;
+	mat4 ViewProjection;
 };
 
 out vec4 tint;
@@ -35,7 +30,7 @@ void main()
 	GPU_SSBO common_data =  common_data[gl_InstanceID];
 
 	TexCoord    = common_data.src.xy + aTexCoord * common_data.src.zw;
-	gl_Position = global_data.ViewProjection * common_data.model * vec4(aPos, 0.0, 1.0);
+	gl_Position = ViewProjection * common_data.model * vec4(aPos, 0.0, 1.0);
 	
 	tint = common_data.tint / 255.0;
 }

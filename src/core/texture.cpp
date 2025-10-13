@@ -30,7 +30,6 @@ GLuint Texture::VAO;
 GLuint Texture::VBO;
 GLuint Texture::EBO;
 GLuint Texture::UBO_Shared;
-Texture::GPU_UBO Texture::UBO_Data;
 
 static void ARGBtoRGBA(unsigned char *&buffer, unsigned int size)
 {
@@ -72,10 +71,9 @@ void Texture::initialize()
 	glVertexArrayAttribBinding(Texture::VAO, aTexCoord_location, vbufIndex);
 	glEnableVertexArrayAttrib(Texture::VAO, aTexCoord_location);
 
-	//! Fill camera buffer (UBO_Shared)
-	Texture::UBO_Data.ViewProjection = Graphics::currentCamera->viewProjection;
+	//? Submit camera data to GPU (UBO_Shared)
 	glCreateBuffers(1, &Texture::UBO_Shared);
-	glNamedBufferData(Texture::UBO_Shared, sizeof(Texture::GPU_UBO), &Texture::UBO_Data, GL_STREAM_DRAW);
+	glNamedBufferData(Texture::UBO_Shared, sizeof(glm::mat4), &Graphics::currentCamera->viewProjection, GL_STREAM_DRAW);
 }
 
 void Texture::finalize()

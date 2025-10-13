@@ -99,9 +99,8 @@ void Graphics::setRenderTexture(RenderTexture *renderTexture)
 
 	Graphics::currentCamera->updateViewProjectionMatrix();
 
-	//? Submit camera data to GPU
-	Texture::UBO_Data.ViewProjection = Graphics::currentCamera->viewProjection;
-	glNamedBufferSubData(Texture::UBO_Shared, 0, sizeof(Texture::GPU_UBO), &Texture::UBO_Data);
+	//? Submit camera data to GPU (UBO_Shared)
+	glNamedBufferSubData(Texture::UBO_Shared, 0, sizeof(glm::mat4), &Graphics::currentCamera->viewProjection);
 }
 
 void Graphics::setVAO(GLuint VAO)

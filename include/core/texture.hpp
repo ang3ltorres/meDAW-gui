@@ -43,7 +43,6 @@ namespace gui
 		static GLuint VBO;
 		static GLuint EBO;
 		static GLuint UBO_Shared;
-		static GPU_UBO UBO_Data;
 		
 		// Constructor common
 		void createTexture(unsigned char *pixelData);
