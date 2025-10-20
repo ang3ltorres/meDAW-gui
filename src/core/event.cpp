@@ -11,7 +11,7 @@ std::function<void()> Event::mouseButtonCallback = nullptr;
 std::function<void()> Event::cursorMovedCallback = nullptr;
 glm::ivec2 Event::cursor;
 
-void Event::EVENT_RESIZED_CALLBACK([[maybe_unused]] GLFWwindow *window, int width, int height)
+void Event::EVENT_RESIZED([[maybe_unused]] GLFWwindow *window, int width, int height)
 {
 	Graphics::width  = width;
 	Graphics::height = height;
@@ -24,7 +24,7 @@ void Event::EVENT_RESIZED_CALLBACK([[maybe_unused]] GLFWwindow *window, int widt
 	if (updateCallback != nullptr) updateCallback();
 }
 
-void Event::EVENT_KEYBOARD_CALLBACK([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)
+void Event::EVENT_KEYBOARD([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)
 {
 	if (action == GLFW_PRESS)
 		keyboardStates[key] = true;
@@ -32,7 +32,7 @@ void Event::EVENT_KEYBOARD_CALLBACK([[maybe_unused]] GLFWwindow* window, int key
 	else if (action == GLFW_RELEASE)
 		keyboardStates[key] = false;
 
-	if (updateCallback != nullptr) updateCallback();
+	// if (updateCallback != nullptr) updateCallback();
 }
 
 void Event::EVENT_MOUSE_BUTTON(GLFWwindow* window, int button, int action, [[maybe_unused]] int mods)
@@ -43,7 +43,7 @@ void Event::EVENT_MOUSE_BUTTON(GLFWwindow* window, int button, int action, [[may
 	else if (action == GLFW_RELEASE)
 		mouseStates[button] = false;
 
-	if (updateCallback != nullptr) updateCallback();
+	// if (updateCallback != nullptr) updateCallback();
 
 	if (action == GLFW_PRESS or action == GLFW_RELEASE)
 	{

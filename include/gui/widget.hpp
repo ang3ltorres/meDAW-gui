@@ -4,6 +4,8 @@
 
 namespace gui
 {
+	extern bool repaintNextFrame;
+
 	struct EventListener
 	{
 		virtual void EVENT_CURSOR_MOVED() = 0;
@@ -43,6 +45,7 @@ namespace gui
 
 		std::function<void()> callback;
 		bool cursorInside;
+		bool active;
 
 		virtual void draw() override;
 		virtual void EVENT_CURSOR_MOVED() override;

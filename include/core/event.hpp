@@ -17,8 +17,8 @@ namespace gui
 		static std::function<void()> cursorMovedCallback;
 		static glm::ivec2 cursor;
 		
-		static void EVENT_RESIZED_CALLBACK(GLFWwindow *window, int width, int height);
-		static void EVENT_KEYBOARD_CALLBACK(GLFWwindow* window, int key, int scancode, int action, int mods);
+		static void EVENT_RESIZED(GLFWwindow *window, int width, int height);
+		static void EVENT_KEYBOARD(GLFWwindow* window, int key, int scancode, int action, int mods);
 		static void EVENT_MOUSE_BUTTON(GLFWwindow* window, int button, int action, int mods);
 		static void EVENT_CURSOR_MOVED(GLFWwindow* window, double xpos, double ypos);
 	};

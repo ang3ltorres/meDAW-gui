@@ -3,6 +3,7 @@
 using namespace gui;
 using namespace glm;
 
+bool gui::repaintNextFrame = false;
 std::vector<EventListener*> Widget::eventSubs;
 
 Widget::Widget(const glm::ivec2& pos, const glm::ivec2& size, const std::string& name)
@@ -14,7 +15,7 @@ Pane::Pane()
 {}
 
 Button::Button(const glm::ivec2& pos, const glm::ivec2& size, std::function<void()> callback)
-: Widget(pos, size, ""), callback(callback), cursorInside(false)
+: Widget(pos, size, ""), callback(callback), cursorInside(false), active(false)
 {
 	shapes.push_back(new shape::Rectangle{});
 
@@ -30,7 +31,8 @@ Button::~Button()
 
 void Button::draw()
 {
-	reinterpret_cast<shape::Rectangle*>(shapes[0])->repaint(size.x, size.y, 8, 2, palette::hex::green, palette::hex::orange);
+	size = {(Graphics::width * 0.2f) / 2, Graphics::height * 0.1f};
+	reinterpret_cast<shape::Rectangle*>(shapes[0])->repaint(size.x, size.y, 8, 8, (active) ? palette::hex::pink : palette::hex::purple, palette::hex::black);
 	shapes[0]->sprite->dst = {pos.x, pos.y, size.x, size.y};
 	shapes[0]->sprite->updateModel();
 	shapes[0]->sprite->batch();
@@ -46,7 +48,19 @@ void Button::EVENT_CURSOR_MOVED()
 
 void Button::EVENT_MOUSE_BUTTON()
 {
-	if (cursorInside and Event::mouseStates[GLFW_MOUSE_BUTTON_1])
+	if (!active and cursorInside and Event::mouseStates[GLFW_MOUSE_BUTTON_1])
+	{
+		draw();
+		repaintNextFrame = true;
+		active = true;
 		callback();
+	}
+
+	if (active and !Event::mouseStates[GLFW_MOUSE_BUTTON_1])
+	{
+		draw();
+		repaintNextFrame = true;
+		active = false;
+	}
 }
 

@@ -18,9 +18,11 @@ int main()
 
 	while (!Graphics::shouldClose())
 	{
-
 		if (Event::keyboardStates[GLFW_KEY_ESCAPE])
 			Graphics::forceClose = true;
+
+		if (repaintNextFrame)
+			Editor::repaint();
 
 		Graphics::pollEvents();
 	}

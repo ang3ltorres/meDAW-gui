@@ -55,10 +55,10 @@ void Graphics::initialize(int width, int height, const char *title)
 	Graphics::delta = 0.0f;
 
 	// Set callbacks
-	glfwSetKeyCallback(Graphics::window, &Event::EVENT_KEYBOARD_CALLBACK);
+	glfwSetKeyCallback(Graphics::window, &Event::EVENT_KEYBOARD);
 	glfwSetMouseButtonCallback(Graphics::window, &Event::EVENT_MOUSE_BUTTON);
 	glfwSetCursorPosCallback(Graphics::window, &Event::EVENT_CURSOR_MOVED);
-	glfwSetFramebufferSizeCallback(Graphics::window, &Event::EVENT_RESIZED_CALLBACK);
+	glfwSetFramebufferSizeCallback(Graphics::window, &Event::EVENT_RESIZED);
 
 	// Components
 	Texture::initialize();

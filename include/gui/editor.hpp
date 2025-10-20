@@ -49,9 +49,10 @@ namespace gui
 		static void initialize();
 		static void finalize();
 
-		static std::vector<Pane*> panes;
 		static void repaint();
 		static void EVENT_MOUSE_BUTTON();
 		static void EVENT_CURSOR_MOVED();
+		
+		static std::vector<Pane*> panes;
 	};
 }
