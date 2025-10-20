@@ -12,7 +12,7 @@ Rectangle::~Rectangle()
   if (texture) texture->~Texture();
 }
 
-void Rectangle::rebuild(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke)
+void Rectangle::repaint(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke)
 {
   const std::string svg = std::format(
 R"(<?xml version='1.0' encoding='UTF-8'?>

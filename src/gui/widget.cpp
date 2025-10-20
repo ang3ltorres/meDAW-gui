@@ -1,4 +1,4 @@
-#include "gui/gui.hpp"
+#include "gui/widget.hpp"
 
 using namespace gui;
 using namespace glm;

@@ -31,6 +31,7 @@ void Graphics::initialize(int width, int height, const char *title)
 
 	Graphics::window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 	glfwMakeContextCurrent(Graphics::window);
+	glfwSetWindowSizeLimits(Graphics::window, 800, 600, GLFW_DONT_CARE, GLFW_DONT_CARE);
 	glewInit();
 
 	glEnable(GL_BLEND);

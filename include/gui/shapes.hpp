@@ -26,6 +26,6 @@ namespace gui::shape
 		Rectangle(const Rectangle&) = delete;
 		virtual ~Rectangle() override;
 
-		void rebuild(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke = palette::hex::white);
+		void repaint(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke = palette::hex::white);
 	};
 }

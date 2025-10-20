@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui.hpp"
+#include "gui/widget.hpp"
 
 namespace gui
 {
@@ -10,7 +10,6 @@ namespace gui
 		TransportBar(const TransportBar&) = delete;
 		virtual ~TransportBar() override;
 
-		virtual void update() override;
 		virtual void draw() override;
 	};
 
@@ -20,7 +19,6 @@ namespace gui
 		ClockDisplays(const ClockDisplays&) = delete;
 		virtual ~ClockDisplays() override;
 
-		virtual void update() override;
 		virtual void draw() override;
 	};
 
@@ -30,7 +28,6 @@ namespace gui
 		ModeSelector(const ModeSelector&) = delete;
 		virtual ~ModeSelector() override;
 
-		//virtual void update() override;
 		//virtual void draw() override;
 	};
 
@@ -40,7 +37,6 @@ namespace gui
 		TopBar(const TopBar&) = delete;
 		virtual ~TopBar() override;
 
-		virtual void update() override;
 		virtual void draw() override;
 
 		TransportBar transportBar;
@@ -52,7 +48,7 @@ namespace gui
 		static void initialize();
 		static void finalize();
 
-		static void update();
+		static void repaint();
 
 		static std::vector<Pane*> panes;
 	};

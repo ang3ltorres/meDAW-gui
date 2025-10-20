@@ -12,13 +12,10 @@ TransportBar::~TransportBar()
 
 }
 
-void TransportBar::update()
-{
-	rect.rebuild(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::green);
-}
-
 void TransportBar::draw()
 {
+	rect.repaint(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::green);
+
 	rect.sprite->batch();
 	rect.sprite->texture->draw();
 }
@@ -33,15 +30,12 @@ ClockDisplays::~ClockDisplays()
 
 }
 
-void ClockDisplays::update()
-{
-	rect.rebuild(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::yellow);
-	rect.sprite->dst.x += Graphics::width * 0.2f;
-	rect.sprite->updateModel();
-}
-
 void ClockDisplays::draw()
 {
+	rect.repaint(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::yellow);
+	rect.sprite->dst.x += Graphics::width * 0.2f;
+	rect.sprite->updateModel();
+
 	rect.sprite->batch();
 	rect.sprite->texture->draw();
 }
@@ -62,17 +56,13 @@ TopBar::TopBar()
 
 TopBar::~TopBar()
 {
-}
 
-void TopBar::update()
-{
-	rect.rebuild(Graphics::width, Graphics::height * 0.1f, 0, 0, palette::hex::dark);
-	transportBar.update();
-	clockDisplays.update();
 }
 
 void TopBar::draw()
 {
+	rect.repaint(Graphics::width, Graphics::height * 0.1f, 0, 0, palette::hex::dark);
+
 	rect.sprite->batch();
 	rect.sprite->texture->draw();
 
@@ -87,10 +77,10 @@ void Editor::initialize()
 	panes.push_back(new TopBar{});
 
 	// First draw
-	Editor::update();
+	Editor::repaint();
 
 	// Set generic update callback
-	Event::updateCallback = &Editor::update;
+	Event::updateCallback = &Editor::repaint;
 }
 
 void Editor::finalize()
@@ -99,15 +89,12 @@ void Editor::finalize()
 		delete i;
 }
 
-void Editor::update()
+void Editor::repaint()
 {
 	Graphics::clearScreen(palette::rgb::darker);
 
 	for (const auto& i : panes)
-	{
-		i->update();
 		i->draw();
-	}
 
 	Graphics::drawBuffer();
 }

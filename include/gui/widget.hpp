@@ -13,7 +13,7 @@ namespace gui
 		glm::ivec2 pos;
 		glm::uvec2 size;
 		std::string name;
-		std::vector<gui::shape::Shape*> shapes;
+		std::vector<gui::shape::Shape> shapes;
 
 		virtual void draw() = 0;
 	};
@@ -24,10 +24,12 @@ namespace gui
 		Pane(const Pane&) = delete;
 		virtual ~Pane() = default;
 		
-		std::vector<Widget*> widgets;
+		std::vector<Widget> widgets;
 		gui::shape::Rectangle rect;
+	};
 
-		// Rearrenge internal widgets and draw them
-		virtual void update() = 0;
+	struct Button : public Widget
+	{
+		
 	};
 }
