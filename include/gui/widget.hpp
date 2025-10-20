@@ -4,6 +4,11 @@
 
 namespace gui
 {
+	struct EventListener
+	{
+		virtual void EVENT_CURSOR_MOVED() = 0;
+	};
+
 	struct Widget
 	{
 		Widget(const glm::ivec2& pos, const glm::uvec2& size, const std::string& name);
@@ -13,9 +18,10 @@ namespace gui
 		glm::ivec2 pos;
 		glm::uvec2 size;
 		std::string name;
-		std::vector<gui::shape::Shape> shapes;
+		std::vector<gui::shape::Shape*> shapes;
 
 		virtual void draw() = 0;
+		static std::vector<EventListener*> eventSubs;
 	};
 
 	struct Pane : public Widget
@@ -24,12 +30,18 @@ namespace gui
 		Pane(const Pane&) = delete;
 		virtual ~Pane() = default;
 		
-		std::vector<Widget> widgets;
+		std::vector<Widget*> widgets;
 		gui::shape::Rectangle rect;
 	};
 
-	struct Button : public Widget
+	struct Button : public Widget, public EventListener
 	{
-		
+		Button(const glm::ivec2& pos, const glm::uvec2& size, std::function<void()> callback);
+		Button(const Button&) = delete;
+		virtual ~Button() override;
+
+		std::function<void()> callback;
+		virtual void draw() override;
+		virtual void EVENT_CURSOR_MOVED() override;
 	};
 }

@@ -57,6 +57,7 @@ void Graphics::initialize(int width, int height, const char *title)
 	// Set callbacks
 	glfwSetKeyCallback(Graphics::window, &Event::keyboardCallback);
 	glfwSetMouseButtonCallback(Graphics::window, &Event::mouseCallback);
+	glfwSetCursorPosCallback(Graphics::window, &Event::cursorCallback);
 	glfwSetFramebufferSizeCallback(Graphics::window, &Event::resizedCallback);
 
 	// Components

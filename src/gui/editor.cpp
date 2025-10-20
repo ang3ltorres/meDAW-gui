@@ -4,6 +4,7 @@ using namespace gui;
 using namespace glm;
 
 TransportBar::TransportBar()
+: buttonTest({100, 0}, {256, 256}, [](){std::println("HELLO WORLD");})
 {
 }
 
@@ -14,10 +15,12 @@ TransportBar::~TransportBar()
 
 void TransportBar::draw()
 {
-	rect.repaint(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::green);
+	buttonTest.draw();
 
-	rect.sprite->batch();
-	rect.sprite->texture->draw();
+	// rect.repaint(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::green);
+
+	// rect.sprite->batch();
+	// rect.sprite->texture->draw();
 }
 
 ClockDisplays::ClockDisplays()
@@ -32,12 +35,12 @@ ClockDisplays::~ClockDisplays()
 
 void ClockDisplays::draw()
 {
-	rect.repaint(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::yellow);
-	rect.sprite->dst.x += Graphics::width * 0.2f;
-	rect.sprite->updateModel();
+	// rect.repaint(Graphics::width * 0.2f, Graphics::height * 0.1f, 0, 0, palette::hex::yellow);
+	// rect.sprite->dst.x += Graphics::width * 0.2f;
+	// rect.sprite->updateModel();
 
-	rect.sprite->batch();
-	rect.sprite->texture->draw();
+	// rect.sprite->batch();
+	// rect.sprite->texture->draw();
 }
 
 ModeSelector::ModeSelector()
@@ -81,6 +84,8 @@ void Editor::initialize()
 
 	// Set generic update callback
 	Event::updateCallback = &Editor::repaint;
+
+	Event::cursorMovedCallback = &Editor::EVENT_CURSOR_MOVED;
 }
 
 void Editor::finalize()
@@ -97,4 +102,10 @@ void Editor::repaint()
 		i->draw();
 
 	Graphics::drawBuffer();
+}
+
+void Editor::EVENT_CURSOR_MOVED()
+{
+	for (auto& i : Widget::eventSubs)
+		i->EVENT_CURSOR_MOVED();
 }

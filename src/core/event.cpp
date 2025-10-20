@@ -7,6 +7,8 @@ using namespace gui;
 std::bitset<512> Event::keyboardStates;
 std::bitset<8>   Event::mouseStates;
 std::function<void()> Event::updateCallback = nullptr;
+std::function<void()> Event::cursorMovedCallback = nullptr;
+glm::ivec2 Event::cursor;
 
 void Event::resizedCallback([[maybe_unused]] GLFWwindow *window, int width, int height)
 {
@@ -18,8 +20,7 @@ void Event::resizedCallback([[maybe_unused]] GLFWwindow *window, int width, int 
 
 	Graphics::setRenderTexture();
 
-	if (updateCallback != nullptr)
-		updateCallback();
+	if (updateCallback != nullptr) updateCallback();
 }
 
 void Event::keyboardCallback([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)
@@ -30,8 +31,7 @@ void Event::keyboardCallback([[maybe_unused]] GLFWwindow* window, int key, [[may
 	else if (action == GLFW_RELEASE)
 		keyboardStates[key] = false;
 
-	if (updateCallback != nullptr)
-		updateCallback();
+	if (updateCallback != nullptr) updateCallback();
 }
 
 void Event::mouseCallback(GLFWwindow* window, int button, int action, [[maybe_unused]] int mods)
@@ -42,13 +42,18 @@ void Event::mouseCallback(GLFWwindow* window, int button, int action, [[maybe_un
 	else if (action == GLFW_RELEASE)
 		mouseStates[button] = false;
 
-	if (updateCallback != nullptr)
-		updateCallback();
+	if (updateCallback != nullptr) updateCallback();
 
 	if (action == GLFW_PRESS or action == GLFW_RELEASE)
 	{
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
 	}
+}
+
+void Event::cursorCallback([[maybe_unused]] GLFWwindow* window, double xpos, double ypos)
+{
+	Event::cursor = {xpos, ypos};
+	if (cursorMovedCallback != nullptr) cursorMovedCallback();
 }
 

@@ -11,6 +11,7 @@ namespace gui
 		virtual ~TransportBar() override;
 
 		virtual void draw() override;
+		Button buttonTest;
 	};
 
 	struct ClockDisplays : public Pane
@@ -48,8 +49,8 @@ namespace gui
 		static void initialize();
 		static void finalize();
 
-		static void repaint();
-
 		static std::vector<Pane*> panes;
+		static void repaint();
+		static void EVENT_CURSOR_MOVED();
 	};
 }
