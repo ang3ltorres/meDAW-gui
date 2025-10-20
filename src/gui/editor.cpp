@@ -86,6 +86,7 @@ void Editor::initialize()
 	Event::updateCallback = &Editor::repaint;
 
 	Event::cursorMovedCallback = &Editor::EVENT_CURSOR_MOVED;
+	Event::mouseButtonCallback = &Editor::EVENT_MOUSE_BUTTON;
 }
 
 void Editor::finalize()
@@ -104,8 +105,15 @@ void Editor::repaint()
 	Graphics::drawBuffer();
 }
 
+void Editor::EVENT_MOUSE_BUTTON()
+{
+	for (auto& i : Widget::eventSubs)
+		i->EVENT_MOUSE_BUTTON();
+}
+
 void Editor::EVENT_CURSOR_MOVED()
 {
 	for (auto& i : Widget::eventSubs)
 		i->EVENT_CURSOR_MOVED();
 }
+

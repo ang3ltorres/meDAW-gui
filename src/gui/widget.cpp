@@ -5,7 +5,7 @@ using namespace glm;
 
 std::vector<EventListener*> Widget::eventSubs;
 
-Widget::Widget(const glm::ivec2& pos, const glm::uvec2& size, const std::string& name)
+Widget::Widget(const glm::ivec2& pos, const glm::ivec2& size, const std::string& name)
 : pos(pos), size(size), name(name), shapes()
 {}
 
@@ -13,8 +13,8 @@ Pane::Pane()
 : Widget({0, 0}, {0, 0}, "")
 {}
 
-Button::Button(const glm::ivec2& pos, const glm::uvec2& size, std::function<void()> callback)
-: Widget(pos, size, ""), callback(callback)
+Button::Button(const glm::ivec2& pos, const glm::ivec2& size, std::function<void()> callback)
+: Widget(pos, size, ""), callback(callback), cursorInside(false)
 {
 	shapes.push_back(new shape::Rectangle{});
 
@@ -39,6 +39,14 @@ void Button::draw()
 
 void Button::EVENT_CURSOR_MOVED()
 {
-	std::println("EVENT_CURSOR_MOVED");
+	cursorInside =
+		(unsigned)(Event::cursor.x - pos.x) <= (unsigned)size.x &&
+		(unsigned)(Event::cursor.y - pos.y) <= (unsigned)size.y;
+}
+
+void Button::EVENT_MOUSE_BUTTON()
+{
+	if (cursorInside and Event::mouseStates[GLFW_MOUSE_BUTTON_1])
+		callback();
 }
 

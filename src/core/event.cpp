@@ -7,10 +7,11 @@ using namespace gui;
 std::bitset<512> Event::keyboardStates;
 std::bitset<8>   Event::mouseStates;
 std::function<void()> Event::updateCallback = nullptr;
+std::function<void()> Event::mouseButtonCallback = nullptr;
 std::function<void()> Event::cursorMovedCallback = nullptr;
 glm::ivec2 Event::cursor;
 
-void Event::resizedCallback([[maybe_unused]] GLFWwindow *window, int width, int height)
+void Event::EVENT_RESIZED_CALLBACK([[maybe_unused]] GLFWwindow *window, int width, int height)
 {
 	Graphics::width  = width;
 	Graphics::height = height;
@@ -23,7 +24,7 @@ void Event::resizedCallback([[maybe_unused]] GLFWwindow *window, int width, int 
 	if (updateCallback != nullptr) updateCallback();
 }
 
-void Event::keyboardCallback([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)
+void Event::EVENT_KEYBOARD_CALLBACK([[maybe_unused]] GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods)
 {
 	if (action == GLFW_PRESS)
 		keyboardStates[key] = true;
@@ -34,7 +35,7 @@ void Event::keyboardCallback([[maybe_unused]] GLFWwindow* window, int key, [[may
 	if (updateCallback != nullptr) updateCallback();
 }
 
-void Event::mouseCallback(GLFWwindow* window, int button, int action, [[maybe_unused]] int mods)
+void Event::EVENT_MOUSE_BUTTON(GLFWwindow* window, int button, int action, [[maybe_unused]] int mods)
 {
 	if (action == GLFW_PRESS)
 		mouseStates[button] = true;
@@ -48,10 +49,13 @@ void Event::mouseCallback(GLFWwindow* window, int button, int action, [[maybe_un
 	{
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
+		Event::cursor = {xpos, ypos};
+		
+		if (mouseButtonCallback != nullptr) mouseButtonCallback();
 	}
 }
 
-void Event::cursorCallback([[maybe_unused]] GLFWwindow* window, double xpos, double ypos)
+void Event::EVENT_CURSOR_MOVED([[maybe_unused]] GLFWwindow* window, double xpos, double ypos)
 {
 	Event::cursor = {xpos, ypos};
 	if (cursorMovedCallback != nullptr) cursorMovedCallback();
