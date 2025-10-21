@@ -52,6 +52,11 @@ void Button::draw()
 			reinterpret_cast<shape::SVG*>(shapes[1])->repaint(size.x, size.y);
 			index = 1;
 		}
+		else if (cursorInside)
+		{
+			reinterpret_cast<shape::SVG*>(shapes[2])->repaint(size.x, size.y);
+			index = 2;
+		}
 		else
 		{
 			reinterpret_cast<shape::SVG*>(shapes[0])->repaint(size.x, size.y);
@@ -67,9 +72,18 @@ void Button::draw()
 
 void Button::EVENT_CURSOR_MOVED()
 {
+	static bool oldCursorInside = false;
+	oldCursorInside = cursorInside;
+
 	cursorInside =
 		(unsigned)(Event::cursor.x - pos.x) <= (unsigned)size.x &&
 		(unsigned)(Event::cursor.y - pos.y) <= (unsigned)size.y;
+
+	if (oldCursorInside != cursorInside)
+	{
+		draw();
+		repaintNextFrame = true;
+	}
 }
 
 void Button::EVENT_MOUSE_BUTTON()
