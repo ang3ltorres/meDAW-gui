@@ -39,13 +39,14 @@ namespace gui
 
 	struct Button : public Widget, public EventListener
 	{
-		Button(const glm::ivec2& pos, const glm::ivec2& size, std::function<void()> callback);
+		Button(const glm::ivec2& pos, const glm::ivec2& size, std::function<void()> callback, std::initializer_list<std::string> icon);
 		Button(const Button&) = delete;
 		virtual ~Button() override;
 
 		std::function<void()> callback;
 		bool cursorInside;
 		bool active;
+		std::vector<std::string> icon;
 
 		virtual void draw() override;
 		virtual void EVENT_CURSOR_MOVED() override;

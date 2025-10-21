@@ -55,3 +55,31 @@ stroke              // 8
   if (sprite) sprite->~Sprite();
   sprite = new (bufferSprite) Sprite{texture};
 }
+
+SVG::SVG(const std::string& fileName)
+: fileName(fileName)
+{
+
+}
+
+SVG::~SVG()
+{
+  if (sprite) sprite->~Sprite();
+  if (texture) texture->~Texture();
+}
+
+void SVG::repaint(unsigned int width, unsigned int height)
+{
+  if (texture)
+  {
+    unsigned char *pixelData;
+    Texture::getPixelDataSVGFixed(fileName.data(), pixelData, width, height);
+    texture->updateTexture(pixelData, width, height);
+  }
+  else
+    texture = new (bufferTexture) Texture{fileName.data(), width, height, 1};
+
+  if (sprite) sprite->~Sprite();
+  sprite = new (bufferSprite) Sprite{texture};
+}
+

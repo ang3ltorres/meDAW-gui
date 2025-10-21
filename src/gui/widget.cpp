@@ -14,10 +14,18 @@ Pane::Pane()
 : Widget({0, 0}, {0, 0}, "")
 {}
 
-Button::Button(const glm::ivec2& pos, const glm::ivec2& size, std::function<void()> callback)
-: Widget(pos, size, ""), callback(callback), cursorInside(false), active(false)
+Button::Button(const glm::ivec2& pos, const glm::ivec2& size, std::function<void()> callback, std::initializer_list<std::string> icon)
+: Widget(pos, size, ""), callback(callback), cursorInside(false), active(false), icon(icon)
 {
-	shapes.push_back(new shape::Rectangle{});
+	
+	if (icon.size() == 0)
+		shapes.push_back(new shape::Rectangle{});
+	else
+	{
+		shapes.push_back(new shape::SVG{*icon.begin()});
+		shapes.push_back(new shape::SVG{*(icon.begin()+1)});
+		shapes.push_back(new shape::SVG{*(icon.begin()+2)});
+	}
 
 	// Subscribe to input events
 	Widget::eventSubs.push_back(this);
@@ -31,12 +39,30 @@ Button::~Button()
 
 void Button::draw()
 {
-	size = {(Graphics::width * 0.2f) / 2, Graphics::height * 0.1f};
-	reinterpret_cast<shape::Rectangle*>(shapes[0])->repaint(size.x, size.y, 8, 8, (active) ? palette::hex::pink : palette::hex::purple, palette::hex::black);
-	shapes[0]->sprite->dst = {pos.x, pos.y, size.x, size.y};
-	shapes[0]->sprite->updateModel();
-	shapes[0]->sprite->batch();
-	shapes[0]->sprite->texture->draw();
+	static int index = 0;
+
+	if (icon.size() == 0)
+	{
+		reinterpret_cast<shape::Rectangle*>(shapes[0])->repaint(size.x, size.y, 0, 0, (active) ? palette::hex::pink : palette::hex::purple, palette::hex::black);
+	}
+	else
+	{
+		if (active)
+		{
+			reinterpret_cast<shape::SVG*>(shapes[1])->repaint(size.x, size.y);
+			index = 1;
+		}
+		else
+		{
+			reinterpret_cast<shape::SVG*>(shapes[0])->repaint(size.x, size.y);
+			index = 0;
+		}
+	}
+
+	shapes[index]->sprite->dst = {pos.x, pos.y, size.x, size.y};
+	shapes[index]->sprite->updateModel();
+	shapes[index]->sprite->batch();
+	shapes[index]->sprite->texture->draw();
 }
 
 void Button::EVENT_CURSOR_MOVED()

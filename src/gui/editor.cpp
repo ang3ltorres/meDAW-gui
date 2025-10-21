@@ -4,7 +4,7 @@ using namespace gui;
 using namespace glm;
 
 TransportBar::TransportBar()
-: buttonTest({0, 0}, {128, 64}, [](){std::println("HELLO WORLD");})
+: buttonTest({0, 0}, {64, 64}, [](){std::println("HELLO WORLD");}, {"../svg/button_play.svg", "../svg/button_play_select.svg", "../svg/button_play.svg"})
 {
 }
 

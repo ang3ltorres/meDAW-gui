@@ -28,4 +28,15 @@ namespace gui::shape
 
 		void repaint(unsigned int width, unsigned int height, unsigned int roundness, unsigned int thickness, std::string_view fill, std::string_view stroke = palette::hex::white);
 	};
+
+	class SVG : public Shape
+	{
+	public:
+		SVG(const std::string& fileName);
+		SVG(const SVG&) = delete;
+		virtual ~SVG() override;
+
+		std::string fileName;
+		void repaint(unsigned int width, unsigned int height);
+	};
 }
