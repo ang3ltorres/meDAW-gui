@@ -25,6 +25,10 @@ Button::Button(const glm::ivec2& pos, const glm::ivec2& size, std::function<void
 		shapes.push_back(new shape::SVG{*icon.begin()});
 		shapes.push_back(new shape::SVG{*(icon.begin()+1)});
 		shapes.push_back(new shape::SVG{*(icon.begin()+2)});
+
+		reinterpret_cast<shape::SVG*>(shapes[1])->repaint(size.x, size.y);
+		reinterpret_cast<shape::SVG*>(shapes[2])->repaint(size.x, size.y);
+		reinterpret_cast<shape::SVG*>(shapes[0])->repaint(size.x, size.y);
 	}
 
 	// Subscribe to input events
@@ -42,27 +46,18 @@ void Button::draw()
 	static int index = 0;
 
 	if (icon.size() == 0)
-	{
 		reinterpret_cast<shape::Rectangle*>(shapes[0])->repaint(size.x, size.y, 0, 0, (active) ? palette::hex::pink : palette::hex::purple, palette::hex::black);
-	}
 	else
 	{
 		if (active)
-		{
-			reinterpret_cast<shape::SVG*>(shapes[1])->repaint(size.x, size.y);
 			index = 1;
-		}
 		else if (cursorInside)
-		{
-			reinterpret_cast<shape::SVG*>(shapes[2])->repaint(size.x, size.y);
 			index = 2;
-		}
 		else
-		{
-			reinterpret_cast<shape::SVG*>(shapes[0])->repaint(size.x, size.y);
 			index = 0;
-		}
 	}
+
+	reinterpret_cast<shape::SVG*>(shapes[index])->repaint(size.x, size.y);
 
 	shapes[index]->sprite->dst = {pos.x, pos.y, size.x, size.y};
 	shapes[index]->sprite->updateModel();
